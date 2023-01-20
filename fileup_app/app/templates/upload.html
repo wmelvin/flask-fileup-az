@@ -1,0 +1,43 @@
+{% extends "_base.html" %}
+
+{% block title_text %}Upload Files - File Upload Site{% endblock %}
+
+{% block main_content %}
+<div id="upload-page">
+    <h1>Upload Files</h1>
+    <form method="post" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="file-input">
+        {{ form.file.label }}<br>
+        {{ form.file(accept=accept) }}
+        </div>
+        
+        {# <div class="purpose-div">
+            {{ form.purpose.label }}<br>
+            <table>
+            {% for subfield in form.purpose %}
+                <tr><td>{{ subfield }}</td><td>{{ subfield.label }}</td></tr>
+            {% endfor %}
+            </table>
+            {% for err in form.purpose.errors %}
+            <span class="errmsg"> ({{ err }})</span>
+            {% endfor %}
+        </div> #}
+
+        <div class="submit-upload">{{ form.submit }}</div>
+    </form>
+
+    {# <div id="uploaded">
+    {% if files %}
+        <p>Files already uploaded:</p>
+        <ul>
+            {% for file in files %}
+                <li><code>{{ file }}</code></li>
+            {% endfor %}
+        </ul>
+    {% endif %} #}
+    
+    </div>
+</div>
+{% endblock main_content%}

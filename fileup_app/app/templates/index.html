@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+{% block title_text %}Home - File Upload Site{% endblock %}
+
+{% block main_content %}
+    <h1>File Upload Site</h1>
+    <div>
+        {% if current_user.is_anonymous %}
+        <p><a href="/login">Sign in</a> to upload files</p>
+        {% else %}
+        <p><a href="/upload">Upload files</a></p>
+        {% endif %}
+    </div>
+{% endblock main_content %}

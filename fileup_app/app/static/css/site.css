@@ -1,0 +1,94 @@
+body {
+    font-family: sans-serif;
+    padding: 1rem 4rem;
+    color: #015da6;
+}
+
+li { padding-top: 4px; }
+
+a:link, a:visited {
+    color: #9f60ac;
+    text-decoration: none;
+}
+
+:link:hover,:visited:hover {
+    color: #00248F;
+    text-decoration: underline;
+}
+
+nav {
+    background-color: #015da6;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 0.3rem;
+    font-size: 18px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav a:link, nav a:visited {
+    color: white;
+}
+nav :link:hover, nav :visited:hover {
+    color: yellow;
+}
+
+.nav-item {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.nav-menu {
+    display: flex;
+}
+
+.nav-user {
+    display: flex;
+}
+
+.nav-username {
+    color: lightskyblue;
+}
+
+#wrapper {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#main_content { margin-top: 3rem; }
+
+.errmsg { color: red; }
+
+.debug-div {
+    display: inline-block;
+    border: 1px solid salmon;
+    color: gray;
+    margin-top: 2rem;
+    padding: 0.5rem;
+}
+
+.purpose-div {
+    display: inline-block;
+    border: 1px solid gray;
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+.purpose-div > label { margin: 0.5rem; }
+
+.file-input {
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+.file-input > input { margin: 0.5rem; }
+
+.submit-upload { margin: 1.5rem; }
+
+#uploaded {
+    margin-top: 2rem;
+    border-top: 2px solid darkslategray;
+    padding: 1rem;
+}

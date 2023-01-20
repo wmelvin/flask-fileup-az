@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title_text %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="static/css/site.css" />
+
+    {% block add_css %}{% endblock %}
+</head>
+
+<body>
+<div id="wrapper">
+
+    <nav>
+        <div class="nav-menu">
+            <div class="nav-item"><a href="/">Home</a></div>
+            {% if not current_user.is_anonymous %}
+            <div class="nav-item"><a href="/upload">Upload</a></div>
+            {% endif %}
+        </div>
+        <div class="nav-user">
+            {% if current_user.is_anonymous %}
+            <div class="nav-item"><a href="/login">Sign In</a></div>
+            {% else %}
+            <div class="nav-item nav-username">{{ current_user.username }}:</div>
+            <div class="nav-item"><a href="/logout">Sign Out</a></div>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+    <ul>
+        {% for msg in messages %}
+        <li class="errmsg">{{ msg }}</li>
+        {% endfor %}
+    </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div id="main_content">
+    {% block main_content %}{% endblock main_content %}
+    </div>
+
+    {# <div class="debug-div">
+        <p>current_user: {{ current_user }}</p>
+    </div> #}
+
+    {% block add_js %}{% endblock %}
+</div>
+</body>
+
+</html>

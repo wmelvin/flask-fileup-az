@@ -1,0 +1,11 @@
+# Dev tools.
+.vscode/
+
+# Python environment.
+venv/
+__pycache__/
+
+# App-specific.
+.env
+local_db/
+uploads/

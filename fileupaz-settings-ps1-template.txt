@@ -1,0 +1,14 @@
+$fileupSettings = @{
+    'FILEUP_SECRET_KEY'          = '';
+    'FILEUP_ENABLE_FEATURES'     = '';
+    'FILEUP_UPLOAD_ACCEPT'       = '.csv,.xls,.xlsx'
+    'FILEUP_MAX_UPLOAD_MB'       = '';
+    'FILEUP_MSAL_REDIRECT_PATH'  = '';
+    'FILEUP_MSAL_AUTHORITY'      = '';
+    'FILEUP_MSAL_CLIENT_ID'      = '';
+    'FILEUP_MSAL_CLIENT_SECRET'  = '';
+    'FILEUP_MSAL_SCOPE'          = '';
+    'FILEUP_STORAGE_ACCOUNT_URL' = '';
+    'FILEUP_STORAGE_CONNECTION'  = '';
+    'FILEUP_STORAGE_CONTAINER'   = ''
+}

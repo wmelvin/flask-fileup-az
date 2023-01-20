@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+
+{% block title_text %}Sign-in Failure{% endblock %}
+
+{% block main_content %}
+
+<h1>Sign-in Failure</h1>
+
+<div style="margin: 2rem;">
+    <p>Error: {{ result.get("error") }}</p>
+    <p>Description: {{ result.get("error_description") }}</p>
+</div>
+<hr>
+<p>Return to: <a href="/">Home</a> page.</p>
+
+{% endblock %}
