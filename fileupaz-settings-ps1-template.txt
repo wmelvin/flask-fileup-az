@@ -10,5 +10,6 @@ $fileupSettings = @{
     'FILEUP_MSAL_SCOPE'          = '';
     'FILEUP_STORAGE_ACCOUNT_URL' = '';
     'FILEUP_STORAGE_CONNECTION'  = '';
-    'FILEUP_STORAGE_CONTAINER'   = ''
+    'FILEUP_STORAGE_CONTAINER'   = '';
+    'FILEUP_TABLES_CONNECTION'   = ''
 }

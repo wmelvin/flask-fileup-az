@@ -18,8 +18,14 @@ from werkzeug.datastructures import FileStorage
 
 # from azure.core.exceptions import ResourceExistsError
 
+from app.storage.tables import create_uploads_table
+
 
 bp = Blueprint("storage", __name__, template_folder="templates")
+
+
+class CheckStorageError(Exception):
+    pass
 
 
 def store_uploaded_file(
@@ -166,6 +172,16 @@ def check_storage():
             test_file.write_text("Testing...")
             with open(test_file, "rb") as f:
                 blob_client.upload_blob(f)
+
+        if current_app.config["TABLES_CONNECTION"]:
+            print("Check Uploads table.")
+            result = create_uploads_table()
+            if result:
+                print(f"OK: {result.table_name}")
+            else:
+                raise CheckStorageError("Failed to create Uploads table.")
+        else:
+            print("(skip) TABLES_CONNECTION not set.")
 
     except Exception as ex:
         print("Exception:")

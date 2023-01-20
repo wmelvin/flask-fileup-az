@@ -21,7 +21,7 @@ class Config(object):
         max_upload_mb = int(s)
     else:
         max_upload_mb = 2
-        
+
     MAX_CONTENT_LENGTH = max_upload_mb * 1024 * 1024
 
     UPLOAD_ACCEPT = os.environ.get("FILEUP_UPLOAD_ACCEPT") or ".csv,.xls,.xlsx"
@@ -42,3 +42,4 @@ class Config(object):
     STORAGE_ACCOUNT_URL = os.environ.get("FILEUP_STORAGE_ACCOUNT_URL")
     STORAGE_CONNECTION = os.environ.get("FILEUP_STORAGE_CONNECTION")
     STORAGE_CONTAINER = os.environ.get("FILEUP_STORAGE_CONTAINER") or "fileup"
+    TABLES_CONNECTION = os.environ.get("FILEUP_TABLES_CONNECTION")

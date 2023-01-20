@@ -34,3 +34,7 @@ FILEUP_STORAGE_CONNECTION=""
 #  If not set, the default is 'fileup'.
 
 FILEUP_STORAGE_CONTAINER=""
+
+FILEUP_TABLES_CONNECTION=""
+#  Set FILEUP_TABLES_CONNECTION to the connection string to use 
+#  for Azure Tables.
