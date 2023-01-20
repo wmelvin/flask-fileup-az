@@ -21,7 +21,7 @@ from functools import wraps
 from werkzeug.local import LocalProxy
 
 
-MAX_AGE_SEC = 60 * 60 * 24 * 90  # Set cookie max_age in seconds to 90 days.
+# MAX_AGE_SEC = 60 * 60 * 24 * 90  # Set cookie max_age in seconds to 90 days.
 
 
 bp = Blueprint("auth", __name__, template_folder="templates")
