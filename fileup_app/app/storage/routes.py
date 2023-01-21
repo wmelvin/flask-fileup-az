@@ -131,6 +131,8 @@ def check_storage():
         return redirect(url_for("main.index"))
 
     try:
+        step = "Requesting service client."
+        print(f"CheckStorage: {step}")
         acct_url = current_app.config["STORAGE_ACCOUNT_URL"]
         if acct_url:
             default_cred = DefaultAzureCredential()
@@ -140,7 +142,7 @@ def check_storage():
         else:
             conn_str = current_app.config["STORAGE_CONNECTION"]
             if not conn_str:
-                flash("check_storage: Not configured to access storage.")
+                flash("CheckStorage: Not configured to access storage.")
                 return redirect(url_for("main.index"))
 
             service_client: BlobServiceClient = (
@@ -149,6 +151,8 @@ def check_storage():
 
         container_name = "fileup"
 
+        step = "Requesting container client."
+        print(f"CheckStorage: {step}")
         container_client: ContainerClient = (
             service_client.get_container_client(container_name)
         )
@@ -162,6 +166,8 @@ def check_storage():
 
         test_file = Path(tempfile.gettempdir()) / "fileup-test.txt"
 
+        step = "Requesting blob client."
+        print(f"CheckStorage: {step}")
         blob_client: BlobClient = container_client.get_blob_client(
             blob=test_file.name
         )
@@ -173,21 +179,22 @@ def check_storage():
             with open(test_file, "rb") as f:
                 blob_client.upload_blob(f)
 
+        step = "Requesting Uploads table."
+        print(f"CheckStorage: {step}")
         if current_app.config["TABLES_CONNECTION"]:
-            print("Check Uploads table.")
             result = create_uploads_table()
             if result:
                 print(f"OK: {result.table_name}")
             else:
-                raise CheckStorageError("Failed to create Uploads table.")
+                raise CheckStorageError("Cannot access Uploads table.")
         else:
             print("(skip) TABLES_CONNECTION not set.")
 
     except Exception as ex:
         print("Exception:")
         print(ex)
-        flash("check_storage: failed")
+        flash(f"CheckStorage: Failed at '{step}'")
         return redirect(url_for("main.index"))
 
-    flash("check_storage: success")
+    flash("CheckStorage: OK.")
     return redirect(url_for("main.index"))
