@@ -6,7 +6,7 @@
 
 Started with a copy of the files in the [flask-file-up](https://github.com/wmelvin/flask-file-up) project as of commit [4f4ee83](https://github.com/wmelvin/flask-file-up/tree/4f4ee83b58f248874396ef977acde63cb8af695e).
 
-Rather than clone that project, and bring along all of its history, a ZIP downloaded was used to get the files. Code related to the database-backed data model (SQLAlchemy-derived classes), and for managing user identities within the app, was removed. This project will use only Azure Active Directory (via MSAL) for user identity management and Azure Storage for receiving uploaded files.
+Rather than clone that project, and bring along all of its history, a ZIP download was used to get the files. Code related to the database model (SQLAlchemy-derived classes), and for managing user identities within the app, was removed. This project will use only Azure Active Directory (via MSAL) for user identity management and Azure Storage for receiving uploaded files.
 
 A new Git repository was created after pruning the code and successfully running the main functions of the app locally (the Flask app ran in the local development server, but was connected to live Azure resources).
 
