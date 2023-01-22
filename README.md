@@ -21,6 +21,7 @@ A new Git repository was created after pruning the code and successfully running
 
 Use [flask.current_app](https://flask.palletsprojects.com/en/latest/api/#flask.current_app) to access `app.config` values in view modules using blueprints. Only available in the [Request Context](https://flask.palletsprojects.com/en/latest/reqcontext/#notes-on-proxies).
 
+
 ### Flask WTForms
 
 [Flask-WTF](https://pypi.org/project/Flask-WTF/) - PyPI
@@ -28,6 +29,7 @@ Use [flask.current_app](https://flask.palletsprojects.com/en/latest/api/#flask.c
 [WTForms](https://wtforms.readthedocs.io/en/3.0.x/) - Documentation
 [Fields / Convenience Fields](https://wtforms.readthedocs.io/en/3.0.x/fields/#convenience-fields)
 [Validators](https://wtforms.readthedocs.io/en/3.0.x/validators/)
+
 
 ### MSAL
 
@@ -37,6 +39,12 @@ Use [flask.current_app](https://flask.palletsprojects.com/en/latest/api/#flask.c
  Wiki: [AzureAD/microsoft-authentication-library-for-python](https://github.com/AzureAD/microsoft-authentication-library-for-python/wiki) - GitHub
 
 [Microsoft identity platform overview](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-overview) - Microsoft Entra -  Microsoft Learn
+
+
+### Azure Storage
+
+[Understanding the Table service data model](https://learn.microsoft.com/en-us/rest/api/storageservices/understanding-the-table-service-data-model) (REST API)
+
 
 ### Deploy to Azure
 

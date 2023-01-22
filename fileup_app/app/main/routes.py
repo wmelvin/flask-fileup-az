@@ -1,22 +1,22 @@
 import os
 
-# from app.auth.routes import current_user, login_required
-from app.auth.routes import login_required
-from app.main import bp
-from app.main.forms import UploadForm
-# from app.models import Org, Purpose, User
-from app.storage.routes import store_uploaded_file
-from datetime import datetime
+from datetime import datetime, timezone
+
 from flask import (
     current_app,
     flash,
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
+
 from werkzeug.utils import secure_filename
+
+from app.auth.routes import login_required
+from app.main import bp
+from app.main.forms import UploadForm
+from app.storage.routes import store_uploaded_file
 
 
 @bp.route("/")
@@ -59,8 +59,6 @@ def upload_files():
         flash("No file(s) selected.")
         return redirect(url_for(upload_url))
 
-    # print(f"upload_files: user='{user}', org='{org}', purpose='{purpose}'")
-
     for up_file in up_files:
         #  up_file is type 'werkzeug.datastructures.FileStorage'
         file_name = secure_filename(up_file.filename)
@@ -75,12 +73,14 @@ def upload_files():
                 flash(f"Invalid file type: '{file_ext}'")
                 return redirect(url_for(upload_url))
 
-            # file_name = f"fileup-u{user.id}-{purpose.get_tag()}-{file_name}"
-            # store_uploaded_file(file_name, org, user, purpose, up_file)
+            dt_utc = datetime.now(timezone.utc)
+            dt_str = dt_utc.strftime("%Y%m%d_%H%M%S_%f")
 
-            dt = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+            # TODO: Should the local time at the client browser be stored?
+            # If so, how?
 
-            file_name = f"upload-{dt}-{file_name}"
-            store_uploaded_file(file_name, up_file)
+            upload_filename = f"upload-{dt_str}-{file_name}"
+
+            store_uploaded_file(upload_filename, file_name, dt_utc, up_file)
 
     return redirect(url_for(upload_url))

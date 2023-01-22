@@ -1,24 +1,17 @@
 import os
 import tempfile
+
+from datetime import datetime, timezone
 from pathlib import Path
 
-# from app import db
-# from app.models import Org, Purpose, UploadedFile, User
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobClient, BlobServiceClient, ContainerClient
-from flask import (
-    Blueprint,
-    current_app,
-    flash,
-    redirect,
-    url_for,
-)
-# from rich import print as rprint
+from flask import Blueprint, current_app, flash, redirect, url_for
 from werkzeug.datastructures import FileStorage
 
-# from azure.core.exceptions import ResourceExistsError
-
-from app.storage.tables import create_uploads_table
+from app.storage.tables import create_uploads_table, insert_into_uploads_table
+from app.auth.routes import current_user
+from app.models import UploadedFile, User
 
 
 bp = Blueprint("storage", __name__, template_folder="templates")
@@ -29,7 +22,9 @@ class CheckStorageError(Exception):
 
 
 def store_uploaded_file(
-    file_name: str,
+    upload_filename: str,
+    raw_filename: str,
+    uploaded_utc: datetime,
     file_data: FileStorage,
 ):
     """
@@ -45,36 +40,37 @@ def store_uploaded_file(
         current_app.config["STORAGE_ACCOUNT_URL"]
         or current_app.config["STORAGE_CONNECTION"]
     ):
-        # storage_name = (
-        #     f"AzureContainer:{current_app.config['STORAGE_CONTAINER']}"
-        # )
+        storage_name = (
+            f"AzureContainer:{current_app.config['STORAGE_CONTAINER']}"
+        )
 
         # TODO: Perhaps storage_name should hold the blob URL for the uploaded
         #  file, depenging on what any downstream processing needs. The column
         #  type might need to be larger than the current String(255).
 
-        _saveToBlob(file_name, file_data)
+        _saveToBlob(upload_filename, file_data)
     else:
         upload_path = current_app.config["UPLOAD_PATH"]
-        # storage_name = f"FileSystem:{upload_path}"
-        file_data.save(os.path.join(upload_path, file_name))
+        storage_name = f"FileSystem:{upload_path}"
+        file_data.save(os.path.join(upload_path, upload_filename))
 
+    user: User = current_user
+    if user:
+        user_name = user.preferred_username
+    else:
+        ds = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
+        user_name = f"UNKNOWN_USER_{ds}"
+        print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
 
-# -- TODO: Store info about uploads to an Azure Storage Table?
-#
-#     ...
-#     uf: UploadedFile = UploadedFile(
-#         file_name,
-#         org.id,
-#         org.org_name,
-#         user.id,
-#         user.username,
-#         purpose.id,
-#         purpose.tag,
-#         storage_name,
-#     )
-#     db.session.add(uf)
-#     db.session.commit()
+    uf: UploadedFile = UploadedFile(
+        upload_filename,
+        raw_filename,
+        user_name,
+        storage_name,
+        uploaded_utc,
+    )
+
+    insert_into_uploads_table(uf.as_entity())
 
 
 def _saveToBlob(file_name: str, file_data: FileStorage):

@@ -1,10 +1,12 @@
+from datetime import datetime
 
 #  As of 2023-01-20, the User object is only created in get_current_user() in
 #  auth/routes.py. The session_user comes from session["user"] (Flask var)
 #  which is set to the value for the msal.ConfidentialClientApplication
 #  "id_token_claims" key.
 
-class User():
+
+class User:
     def __init__(self, session_user=None):
         self._session_user = session_user
 
@@ -41,3 +43,34 @@ class User():
     @property
     def is_authenticated(self):
         return self._session_user is not None
+
+
+class UploadedFile:
+    def __init__(
+        self,
+        upload_filename: str,
+        raw_filename: str,
+        user_name: str,
+        storage_name: str,
+        uploaded_utc: datetime,
+    ):
+        self.upload_filename = upload_filename
+        self.raw_filename = raw_filename
+        self.user_name = user_name
+        self.storage_name = storage_name
+        self.uploaded_utc = uploaded_utc
+
+    def __repr__(self) -> str:
+        return f"<UploadedFile '{self.user_name}':'{self.upload_filename}'>"
+
+    def as_entity(self):
+        row_key = f"{self.user_name}:{self.upload_filename}"
+        result = {
+            "PartitionKey": "UploadedFile",
+            "RowKey": row_key,
+            "UploadFileName": self.upload_filename,
+            "RawFileName": self.raw_filename,
+            "User": self.user_name,
+            "UploadedUTC": self.uploaded_utc,
+        }
+        return result
