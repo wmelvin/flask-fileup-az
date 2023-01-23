@@ -1,19 +1,26 @@
 from azure.core.exceptions import ResourceExistsError
+from azure.identity import DefaultAzureCredential
 from azure.data.tables import TableServiceClient, TableClient
-from flask import current_app
+
+from app.storage.settings import get_storage_connstr, get_storage_acct_url
 
 
 def create_uploads_table() -> TableClient:
     try:
-        conn_str = current_app.config["TABLES_CONNECTION"]
-        if not conn_str:
-            # flash("Upload failed: Missing storage configuration.")
-            # return redirect(url_for("main.index"))
-            return None
-
-        service_client = TableServiceClient.from_connection_string(
-            conn_str=conn_str
-        )
+        conn_str = get_storage_connstr()
+        if conn_str:
+            service_client = TableServiceClient.from_connection_string(
+                conn_str=conn_str
+            )
+        else:
+            acct_url = get_storage_acct_url("table")
+            if acct_url:
+                default_cred = DefaultAzureCredential()
+                service_client: TableServiceClient = TableServiceClient(
+                    acct_url, credential=default_cred
+                )
+            else:
+                return None
 
         table_client = service_client.create_table_if_not_exists(
             table_name="Uploads"

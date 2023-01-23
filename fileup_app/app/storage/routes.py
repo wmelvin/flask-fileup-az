@@ -9,6 +9,7 @@ from azure.storage.blob import BlobClient, BlobServiceClient, ContainerClient
 from flask import Blueprint, current_app, flash, redirect, url_for
 from werkzeug.datastructures import FileStorage
 
+from app.storage.settings import get_storage_acct_url, get_storage_connstr
 from app.storage.tables import create_uploads_table, insert_into_uploads_table
 from app.auth.routes import current_user
 from app.models import UploadedFile, User
@@ -36,10 +37,7 @@ def store_uploaded_file(
     the database.
     """
 
-    if (
-        current_app.config["STORAGE_ACCOUNT_URL"]
-        or current_app.config["STORAGE_CONNECTION"]
-    ):
+    if (current_app.config["STORAGE_ACCOUNT_NAME"]):
         storage_name = (
             f"AzureContainer:{current_app.config['STORAGE_CONTAINER']}"
         )
@@ -75,22 +73,21 @@ def store_uploaded_file(
 
 def _saveToBlob(file_name: str, file_data: FileStorage):
     try:
-        #  Prefer using the DefaultAzureCredential if configured.
-        acct_url = current_app.config["STORAGE_ACCOUNT_URL"]
-        if acct_url:
-            default_cred = DefaultAzureCredential()
-            service_client: BlobServiceClient = BlobServiceClient(
-                acct_url, credential=default_cred
-            )
-        else:
-            conn_str = current_app.config["STORAGE_CONNECTION"]
-            if not conn_str:
-                flash("Upload failed: Missing storage configuration.")
-                return redirect(url_for("main.index"))
-
+        conn_str = get_storage_connstr()
+        if conn_str:
             service_client: BlobServiceClient = (
                 BlobServiceClient.from_connection_string(conn_str)
             )
+        else:
+            acct_url = get_storage_acct_url("blob")
+            if acct_url:
+                default_cred = DefaultAzureCredential()
+                service_client: BlobServiceClient = BlobServiceClient(
+                    acct_url, credential=default_cred
+                )
+            else:
+                flash("Upload failed: Missing storage configuration.")
+                return redirect(url_for("main.index"))
 
         container_name = current_app.config["STORAGE_CONTAINER"]
 

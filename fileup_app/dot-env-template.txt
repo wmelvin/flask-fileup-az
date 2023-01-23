@@ -2,12 +2,12 @@
 
 FILEUP_SECRET_KEY="<str: long-string-of-randomness-goes-here>"
 
+
 # Use FILEUP_ENABLE_FEATURES to enable optional features.
 #   "CheckStorage" enables the /checkstorage route that checks Azure Storage
 #   Blob functions.
-
+#
 FILEUP_ENABLE_FEATURES=""
-
 
 FILEUP_MAX_UPLOAD_MB=<int>
 
@@ -18,23 +18,20 @@ FILEUP_MSAL_CLIENT_SECRET=""
 FILEUP_MSAL_SCOPE=""
 
 
-#  Set FILEUP_STORAGE_ACCOUNT_URL to the Storage Account URL to use 
-#  the DefaultAzureCredential method. FILEUP_STORAGE_ACCOUNT_URL 
-#  will override FILEUP_STORAGE_CONNECTION if both are set.
-
-FILEUP_STORAGE_ACCOUNT_URL=""
-
-#  Set FILEUP_STORAGE_CONNECTION to the connection string for the Azure 
-#  Storage Account to use the Connection String method.
-
-FILEUP_STORAGE_CONNECTION=""
-
 #  Set FILEUP_STORAGE_CONTAINER to the Azure Storage container name.
 #  Container names must be all lower case.
 #  If not set, the default is 'fileup'.
-
+#
 FILEUP_STORAGE_CONTAINER=""
 
-FILEUP_TABLES_CONNECTION=""
-#  Set FILEUP_TABLES_CONNECTION to the connection string to use 
-#  for Azure Tables.
+
+#  Used for both connection strings as account URLs. Required.
+#
+FILEUP_STORAGE_ACCOUNT_NAME=""
+
+
+#  Set these two to use connection strings. If either of these is not set
+#  then the DefaultAzureCredential is used instead of connection strings.
+#
+FILEUP_STORAGE_ACCOUNT_KEY=""
+FILEUP_STORAGE_ENDPOINT_SUFFIX="core.windows.net"

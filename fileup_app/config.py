@@ -39,7 +39,11 @@ class Config(object):
 
     # -- Configuration for Azure Storage.
 
-    STORAGE_ACCOUNT_URL = os.environ.get("FILEUP_STORAGE_ACCOUNT_URL")
-    STORAGE_CONNECTION = os.environ.get("FILEUP_STORAGE_CONNECTION")
     STORAGE_CONTAINER = os.environ.get("FILEUP_STORAGE_CONTAINER") or "fileup"
-    TABLES_CONNECTION = os.environ.get("FILEUP_TABLES_CONNECTION")
+
+    STORAGE_ACCOUNT_NAME = os.environ.get("FILEUP_STORAGE_ACCOUNT_NAME")
+
+    STORAGE_ACCOUNT_KEY = os.environ.get("FILEUP_STORAGE_ACCOUNT_KEY")
+
+    STORAGE_ENDPOINT_SUFFIX = os.environ.get("FILEUP_STORAGE_ENDPOINT_SUFFIX")
+    # or "core.windows.net"
