@@ -24,15 +24,15 @@
 # Create and configure Azure resources.
 
 if (RGExists($rgName)) {
-    Write-Host "`nResource group exists: $rgName`n"
+    Say "`nResource group exists: $rgName`n"
 }
 else {
-    Write-Host "`nSTEP - Create resource group: $rgName`n"
+    Say "`nSTEP - Create resource group: $rgName`n"
     az group create -n $rgName -l $location
 }
 
 
-Write-Host "`nSTEP - Create Storage Account: $storageAcctName`n"
+Say "`nSTEP - Create Storage Account: $storageAcctName`n"
 
 # -- Create the Storage Account.
 #    https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az-storage-account-create
@@ -54,7 +54,7 @@ $storageKey = $(az storage account keys list -g $rgName -n $storageAcctName --qu
 #    https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-dotnet?tabs=visual-studio%2Cmanaged-identity%2Croles-azure-cli%2Csign-in-azure-cli%2Cidentity-visual-studio#authenticate-to-azure-and-authorize-access-to-blob-data
 
 if ($storageRoleAssignee) {
-  Write-Host "`nSTEP - Assign blob data access role for : $storageAcctName`n"
+  Say "`nSTEP - Assign blob data access role for : $storageAcctName`n"
   $storageResourceId = $(az storage account show -g $rgName -n $storageAcctName --query id)
 
   az role assignment create `
@@ -69,7 +69,7 @@ if ($storageRoleAssignee) {
 # -- Create storage container.
 #    https://docs.microsoft.com/en-us/cli/azure/storage/container?view=azure-cli-latest#az-storage-container-create
 
-Write-Host "`nSTEP - Create Storage Container: $storageContainerName`n"
+Say "`nSTEP - Create Storage Container: $storageContainerName`n"
 
 az storage container create `
   --account-key $storageKey `

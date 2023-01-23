@@ -9,9 +9,10 @@
 #
 # ----------------------------------------------------------------------
 
+. .\az-setup-funcs.ps1  # Define some functions.
 
 $baseName = "fileupaz"
-$uniqtag = "22"
+$uniqtag = "23"
 
 
 # -- Get key variables from file in local encrypted folder.
@@ -27,7 +28,7 @@ $keysFile = [System.IO.Path]::Combine($profilePath, "KeepLocal", "${baseName}-se
 function CheckVarSet ([string] $varName) {
 
   if (![bool](Get-Variable -Name $varName -ErrorAction:Ignore)) {
-    Write-Host "ERROR: '$varName' not set in '$keysFile'."
+    Yell "ERROR: '$varName' not set in '$keysFile'."
     Exit 1
   }
 }
@@ -40,7 +41,7 @@ CheckVarSet "storageRoleAssignee"
 function CheckKeyExists ([string] $varName) {
 
   if (! $fileupSettings.ContainsKey($varName)) {
-    Write-Host "ERROR: '$varName' not set in '$keysFile'."
+    Yell "ERROR: '$varName' not set in '$keysFile'."
     Exit 1
   }
 }
@@ -73,27 +74,12 @@ if (!$storageContainerName) {
   $storageContainerName = "fileup"
 }
 
-Write-Host "INFO:               rgName = '$rgName'"
-Write-Host "INFO:             location = '$location'"
-Write-Host "INFO:       appServiceName = '$appServiceName'"
-Write-Host "INFO:           webAppName = '$webAppName'"
-Write-Host "INFO:      storageAcctName = '$storageAcctName'"
-Write-Host "INFO: storageContainerName = '$storageContainerName'"
-
-
-# -- Define a function to check if a resource group exists.
-#    https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az_group_list
-
-function RGExists([string]$rgName)
-{
-    $t = az group list | ConvertFrom-Json | Select-Object Name
-    if ($null -eq $t) {
-        return $false
-    }
-    else {
-        return $t.Name.Contains($rgName)
-    }
-}
+Say "INFO:               rgName = '$rgName'"
+Say "INFO:             location = '$location'"
+Say "INFO:       appServiceName = '$appServiceName'"
+Say "INFO:           webAppName = '$webAppName'"
+Say "INFO:      storageAcctName = '$storageAcctName'"
+Say "INFO: storageContainerName = '$storageContainerName'"
 
 
 # ======================================================================

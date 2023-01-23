@@ -38,7 +38,7 @@ if ($storageRoleAssignee) {
   #  If the setting for FILEUP_STORAGE_ACCOUNT_URL is empty, it will not be
   #  in $appSettingsStr. Add that setting when using $storageRoleAssignee.
   if (!$fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"]) {
-    Write-Host "`nAdd setting FILEUP_STORAGE_ACCOUNT_URL`n"
+    Say "`nAdd setting FILEUP_STORAGE_ACCOUNT_URL`n"
     $storageAcctUrl = "https://${storageAcctName}.blob.core.windows.net"
     $fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"] = $storageAcctUrl
   }
@@ -47,7 +47,7 @@ else {
   #  When not using the DefaultAzureCredential to access blob storage,
   #  set the connection string.
   if (!$fileupSettings["FILEUP_STORAGE_CONNECTION"]) {
-    Write-Host "`nAdd setting FILEUP_STORAGE_CONNECTION`n"
+    Say "`nAdd setting FILEUP_STORAGE_CONNECTION`n"
     $fileupSettings["FILEUP_STORAGE_CONNECTION"] = $storageConnStr
   }
 }
@@ -55,7 +55,7 @@ else {
 # -- Add setting for table storage connection.
 
 if (!$fileupSettings["FILEUP_TABLES_CONNECTION"]) {
-  Write-Host "`nAdd setting FILEUP_TABLES_CONNECTION`n"
+  Say "`nAdd setting FILEUP_TABLES_CONNECTION`n"
   $fileupSettings["FILEUP_TABLES_CONNECTION"] = $storageConnStr
 }
   
@@ -80,10 +80,10 @@ foreach ($key in $fileupSettings.Keys) {
 # Create and configure Azure resources.
 
 if (RGExists($rgName)) {
-    Write-Host "`nResource group exists: $rgName`n"
+    Say "`nResource group exists: $rgName`n"
 }
 else {
-    Write-Host "`nSTEP - Create resource group: $rgName`n"
+    Say "`nSTEP - Create resource group: $rgName`n"
     az group create -n $rgName -l $location
 }
 
@@ -91,7 +91,7 @@ else {
 # -- Create the App Service Plan (Linux).
 #    https://docs.microsoft.com/en-us/cli/azure/appservice/plan?view=azure-cli-latest#az-appservice-plan-create
 
-Write-Host "`nSTEP - Create App Service Plan: $appServiceName`n"
+Say "`nSTEP - Create App Service Plan: $appServiceName`n"
 
 az appservice plan create `
   --name $appServiceName `
@@ -105,7 +105,7 @@ az appservice plan create `
 #
 #    az webapp list-runtimes
 
-Write-Host "`nSTEP - Create Web App: $webAppName`n"
+Say "`nSTEP - Create Web App: $webAppName`n"
 
 az webapp create `
   -g $rgName `
@@ -117,7 +117,7 @@ az webapp create `
 # -- Configure for ZIP file deployment.
 #    https://learn.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=flask%2Cwindows%2Cazure-cli%2Czip-deploy%2Cdeploy-instructions-azcli%2Cterminal-bash%2Cdeploy-instructions-zip-azcli#3---deploy-your-application-code-to-azure
 
-Write-Host "`nSTEP - Configure settings for: $webAppName`n"
+Say "`nSTEP - Configure settings for: $webAppName`n"
 
 az webapp config appsettings set `
     -g $rgName `
@@ -128,7 +128,7 @@ az webapp config appsettings set `
 # -- Configure settings for the web app. These are available to the app as environment variables.
 #    https://learn.microsoft.com/en-us/cli/azure/webapp/config/appsettings?view=azure-cli-latest
 
-Write-Host "`nSTEP - Configure web app settings for: $webAppName`n"
+Say "`nSTEP - Configure web app settings for: $webAppName`n"
 
 
 #  In order to treat the settings in $appSettingsStr as separate arguments that
@@ -141,7 +141,7 @@ Invoke-Expression $expr
 # -- Set custom startup command for running the Flask app.
 #    https://learn.microsoft.com/en-us/azure/app-service/configure-language-python#customize-startup-command
 
-Write-Host "`nSTEP - Configure startup command for: $webAppName`n"
+Say "`nSTEP - Configure startup command for: $webAppName`n"
 
 $startCmd = "gunicorn --bind=0.0.0.0 --timeout 600 --chdir fileup_app fileup:app"
 az webapp config set -g $rgName --name $webAppName --startup-file $startCmd
