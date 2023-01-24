@@ -12,7 +12,7 @@
 . .\az-setup-funcs.ps1  # Define some functions.
 
 $baseName = "fileupaz"
-$uniqtag = "23"
+$uniqtag = "24"
 
 
 # -- Get key variables from file in local encrypted folder.
@@ -55,10 +55,10 @@ CheckKeyExists "FILEUP_MSAL_AUTHORITY"
 CheckKeyExists "FILEUP_MSAL_CLIENT_ID"
 CheckKeyExists "FILEUP_MSAL_CLIENT_SECRET"
 CheckKeyExists "FILEUP_MSAL_SCOPE"
-CheckKeyExists "FILEUP_STORAGE_ACCOUNT_URL"
-CheckKeyExists "FILEUP_STORAGE_CONNECTION"
 CheckKeyExists "FILEUP_STORAGE_CONTAINER"
-CheckKeyExists "FILEUP_TABLES_CONNECTION"
+CheckKeyExists "FILEUP_STORAGE_ACCOUNT_NAME"
+CheckKeyExists "FILEUP_STORAGE_ACCOUNT_KEY"
+CheckKeyExists "FILEUP_STORAGE_ENDPOINT_SUFFIX"
 
 
 # -- Assign additional variables used in this script.

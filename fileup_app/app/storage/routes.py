@@ -27,7 +27,7 @@ def store_uploaded_file(
     raw_filename: str,
     uploaded_utc: datetime,
     file_data: FileStorage,
-):
+) -> str:
     """
     If Azure Storage is configured, the uploaded file will be stored
     in a blob container. Otherwise the uploaded file is written to
@@ -35,8 +35,10 @@ def store_uploaded_file(
 
     After the file is stored, a UploadedFile record is inserted in
     the database.
-    """
 
+    Returns an error message, or an empty string if no errors.
+    """
+    err = ""
     if (current_app.config["STORAGE_ACCOUNT_NAME"]):
         storage_name = (
             f"AzureContainer:{current_app.config['STORAGE_CONTAINER']}"
@@ -46,32 +48,38 @@ def store_uploaded_file(
         #  file, depenging on what any downstream processing needs. The column
         #  type might need to be larger than the current String(255).
 
-        _saveToBlob(upload_filename, file_data)
+        err = _saveToBlob(upload_filename, file_data)
     else:
         upload_path = current_app.config["UPLOAD_PATH"]
         storage_name = f"FileSystem:{upload_path}"
         file_data.save(os.path.join(upload_path, upload_filename))
 
-    user: User = current_user
-    if user:
-        user_name = user.preferred_username
-    else:
-        ds = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
-        user_name = f"UNKNOWN_USER_{ds}"
-        print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
+    if not err:
+        user: User = current_user
+        if user:
+            user_name = user.preferred_username
+        else:
+            ds = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
+            user_name = f"UNKNOWN_USER_{ds}"
+            print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
 
-    uf: UploadedFile = UploadedFile(
-        upload_filename,
-        raw_filename,
-        user_name,
-        storage_name,
-        uploaded_utc,
-    )
+        uf: UploadedFile = UploadedFile(
+            upload_filename,
+            raw_filename,
+            user_name,
+            storage_name,
+            uploaded_utc,
+        )
 
-    insert_into_uploads_table(uf.as_entity())
+        err = insert_into_uploads_table(uf.as_entity())
+
+    return err
 
 
-def _saveToBlob(file_name: str, file_data: FileStorage):
+def _saveToBlob(file_name: str, file_data: FileStorage) -> str:
+    """
+    Returns an error message, or an empty string if no errors.
+    """
     try:
         conn_str = get_storage_connstr()
         if conn_str:
@@ -86,8 +94,7 @@ def _saveToBlob(file_name: str, file_data: FileStorage):
                     acct_url, credential=default_cred
                 )
             else:
-                flash("Upload failed: Missing storage configuration.")
-                return redirect(url_for("main.index"))
+                return "Upload failed: Missing storage configuration."
 
         container_name = current_app.config["STORAGE_CONTAINER"]
 
@@ -111,11 +118,12 @@ def _saveToBlob(file_name: str, file_data: FileStorage):
         else:
             blob_client.upload_blob(file_data)
 
+        return ""
+
     except Exception as ex:
         print("Exception:")
         print(ex)
-        flash("Upload failed.")
-        return redirect(url_for("main.index"))
+        return f"Upload failed: {ex.error_code}"
 
 
 @bp.route("/checkstorage", methods=["GET"])

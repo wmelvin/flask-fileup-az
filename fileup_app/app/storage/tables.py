@@ -34,13 +34,20 @@ def create_uploads_table() -> TableClient:
         return None
 
 
-def insert_into_uploads_table(upload_entity):
+def insert_into_uploads_table(upload_entity) -> str:
+    """
+    Returns an error message, or an empty string if no errors.
+    """
     uploads_table = create_uploads_table()
     if not uploads_table:
         # TODO: Log error.
-        return
+        return "Failed to access Uploads table."
+
     try:
         response = uploads_table.create_entity(upload_entity)
         print(response)
     except ResourceExistsError:
+        # TODO: Do not return this error, but do log it.
         print(f"Entity already exists for {upload_entity}")
+
+    return ""

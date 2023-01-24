@@ -42,9 +42,7 @@ def upload():
 
     form = UploadForm()
 
-    return render_template(
-        "upload.html", form=form, accept=accept
-    )
+    return render_template("upload.html", form=form, accept=accept)
 
 
 @bp.route("/upload", methods=["POST"])
@@ -76,11 +74,13 @@ def upload_files():
             dt_utc = datetime.now(timezone.utc)
             dt_str = dt_utc.strftime("%Y%m%d_%H%M%S_%f")
 
-            # TODO: Should the local time at the client browser be stored?
-            # If so, how?
-
             upload_filename = f"upload-{dt_str}-{file_name}"
 
-            store_uploaded_file(upload_filename, file_name, dt_utc, up_file)
+            err = store_uploaded_file(
+                upload_filename, file_name, dt_utc, up_file
+            )
+            if err:
+                flash(err)
+                return redirect(url_for("main.index"))
 
     return redirect(url_for(upload_url))

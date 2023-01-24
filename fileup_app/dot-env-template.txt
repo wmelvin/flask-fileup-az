@@ -1,16 +1,26 @@
 # Template for the .env file which is excluded from source control.
 
+#  Flask app.secret_key 
+#    "A secret key that will be used for securely signing the session cookie
+#    and can be used for any other security related needs by extensions or
+#    your application."
+#  Generate> python3 -c 'import secrets; print(secrets.token_hex())'
+#
 FILEUP_SECRET_KEY="<str: long-string-of-randomness-goes-here>"
 
 
-# Use FILEUP_ENABLE_FEATURES to enable optional features.
-#   "CheckStorage" enables the /checkstorage route that checks Azure Storage
-#   Blob functions.
+#  Use FILEUP_ENABLE_FEATURES to enable optional features.
+#    "CheckStorage" enables the /checkstorage route that checks Azure Storage
+#    Blob functions.
 #
 FILEUP_ENABLE_FEATURES=""
 
+
 FILEUP_MAX_UPLOAD_MB=<int>
 
+
+#  Configuration for the Microsoft Authentication Library.
+#
 FILEUP_MSAL_REDIRECT_PATH=""
 FILEUP_MSAL_AUTHORITY="https://login.microsoftonline.com/(tenant_id)"
 FILEUP_MSAL_CLIENT_ID=""
