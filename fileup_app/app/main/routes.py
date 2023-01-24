@@ -25,6 +25,12 @@ def index():
     return render_template("index.html")
 
 
+@bp.route("/version")
+def version():
+    flash(f"Version {current_app.config.get('FILEUP_VERSION')}")
+    return render_template("index.html")
+
+
 @bp.route("/upload")
 @login_required
 def upload():

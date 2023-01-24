@@ -8,6 +8,8 @@ load_dotenv(os.path.join(basedir, ".env"))
 
 
 class Config(object):
+    FILEUP_VERSION = "230124.4"
+
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.
 
@@ -29,21 +31,23 @@ class Config(object):
 
     # -- Configuration for MSAL.
 
-    MSAL_REDIRECT_PATH = os.environ.get("FILEUP_MSAL_REDIRECT_PATH")
-    MSAL_AUTHORITY = os.environ.get("FILEUP_MSAL_AUTHORITY")
-    MSAL_CLIENT_ID = os.environ.get("FILEUP_MSAL_CLIENT_ID")
-    MSAL_CLIENT_SECRET = os.environ.get("FILEUP_MSAL_CLIENT_SECRET")
+    MSAL_REDIRECT_PATH = os.environ.get("FILEUP_MSAL_REDIRECT_PATH", "")
+    MSAL_AUTHORITY = os.environ.get("FILEUP_MSAL_AUTHORITY", "")
+    MSAL_CLIENT_ID = os.environ.get("FILEUP_MSAL_CLIENT_ID", "")
+    MSAL_CLIENT_SECRET = os.environ.get("FILEUP_MSAL_CLIENT_SECRET", "")
 
-    MSAL_SCOPE = [os.environ.get("FILEUP_MSAL_SCOPE")]
+    MSAL_SCOPE = [os.environ.get("FILEUP_MSAL_SCOPE", "")]
     #  SCOPE needs to be a list.
 
     # -- Configuration for Azure Storage.
 
     STORAGE_CONTAINER = os.environ.get("FILEUP_STORAGE_CONTAINER") or "fileup"
 
-    STORAGE_ACCOUNT_NAME = os.environ.get("FILEUP_STORAGE_ACCOUNT_NAME")
+    STORAGE_ACCOUNT_NAME = os.environ.get("FILEUP_STORAGE_ACCOUNT_NAME", "")
 
-    STORAGE_ACCOUNT_KEY = os.environ.get("FILEUP_STORAGE_ACCOUNT_KEY")
+    STORAGE_ACCOUNT_KEY = os.environ.get("FILEUP_STORAGE_ACCOUNT_KEY", "")
 
-    STORAGE_ENDPOINT_SUFFIX = os.environ.get("FILEUP_STORAGE_ENDPOINT_SUFFIX")
+    STORAGE_ENDPOINT_SUFFIX = os.environ.get(
+        "FILEUP_STORAGE_ENDPOINT_SUFFIX", ""
+    )
     # or "core.windows.net"
