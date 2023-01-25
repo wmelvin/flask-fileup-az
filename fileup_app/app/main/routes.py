@@ -43,7 +43,10 @@ def upload():
         assert isinstance(upload_accept, str)  # TODO: remove after live test.
         accept = upload_accept
     else:
-        print("No UPLOAD_ACCEPT configured. Default to '.csv'.")
+        # print("No UPLOAD_ACCEPT configured. Default to '.csv'.")
+        current_app.logger.warning(
+            "No UPLOAD_ACCEPT configured. Default to '.csv'."
+        )
         accept = ".csv"
 
     form = UploadForm()
@@ -86,6 +89,7 @@ def upload_files():
                 upload_filename, file_name, dt_utc, up_file
             )
             if err:
+                current_app.logger.error(err)
                 flash(err)
                 return redirect(url_for("main.index"))
 

@@ -12,7 +12,7 @@
 . .\az-setup-funcs.ps1  # Define some functions.
 
 $baseName = "fileupaz"
-$uniqtag = "24"
+$uniqtag = "01"
 
 
 # -- Get key variables from file in local encrypted folder.

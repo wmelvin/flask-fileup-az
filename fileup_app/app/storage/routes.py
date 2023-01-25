@@ -61,7 +61,8 @@ def store_uploaded_file(
         else:
             ds = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
             user_name = f"UNKNOWN_USER_{ds}"
-            print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
+            # print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
+            current_app.logger.info(f"store_uploaded_file: {user_name}")
 
         uf: UploadedFile = UploadedFile(
             upload_filename,
@@ -102,28 +103,36 @@ def _saveToBlob(file_name: str, file_data: FileStorage) -> str:
             service_client.get_container_client(container_name)
         )
         if container_client.exists():
-            print(f"Container exists: '{container_client.container_name}'")
+            # print(f"Container exists: '{container_client.container_name}'")
+            current_app.logger.info(
+                f"Container exists: '{container_client.container_name}'"
+            )
         else:
             container_client: ContainerClient = (
                 service_client.create_container(container_name)
             )
-            print(f"Created container: '{container_client.container_name}'")
+            # print(f"Created container: '{container_client.container_name}'")
+            current_app.logger.info(
+                f"Created container: '{container_client.container_name}'"
+            )
 
         blob_client: BlobClient = container_client.get_blob_client(
             blob=file_name
         )
 
         if blob_client.exists():
-            print(f"Blob exists: '{blob_client.blob_name}'")
+            # print(f"Blob exists: '{blob_client.blob_name}'")
+            current_app.logger.info(f"Blob exists: '{blob_client.blob_name}'")
         else:
             blob_client.upload_blob(file_data)
 
         return ""
 
-    except Exception as ex:
-        print("Exception:")
-        print(ex)
-        return f"Upload failed: {ex.error_code}"
+    except Exception:
+        # print("Exception:")
+        # print(ex)
+        current_app.logger.exception("_saveToBlob failed")
+        return "Exception - upload failed"
 
 
 @bp.route("/checkstorage", methods=["GET"])
@@ -133,7 +142,7 @@ def check_storage():
 
     try:
         step = "Requesting service client."
-        print(f"CheckStorage: {step}")
+        current_app.logger.info(f"CheckStorage: {step}")
         acct_url = current_app.config["STORAGE_ACCOUNT_URL"]
         if acct_url:
             default_cred = DefaultAzureCredential()
@@ -153,45 +162,50 @@ def check_storage():
         container_name = "fileup"
 
         step = "Requesting container client."
-        print(f"CheckStorage: {step}")
+        current_app.logger.info(f"CheckStorage: {step}")
         container_client: ContainerClient = (
             service_client.get_container_client(container_name)
         )
         if container_client.exists():
-            print(f"Container exists: '{container_client.container_name}'")
+            current_app.logger.info(
+                f"Container exists: '{container_client.container_name}'"
+            )
         else:
             container_client: ContainerClient = (
                 service_client.create_container(container_name)
             )
-            print(f"Created container: '{container_client.container_name}'")
+            current_app.logger.info(
+                f"Created container: '{container_client.container_name}'"
+            )
 
         test_file = Path(tempfile.gettempdir()) / "fileup-test.txt"
 
         step = "Requesting blob client."
-        print(f"CheckStorage: {step}")
+        current_app.logger.info(f"CheckStorage: {step}")
         blob_client: BlobClient = container_client.get_blob_client(
             blob=test_file.name
         )
 
         if blob_client.exists():
-            print(f"Blob exists: '{blob_client.blob_name}'")
+            current_app.logger.info(f"Blob exists: '{blob_client.blob_name}'")
         else:
             test_file.write_text("Testing...")
             with open(test_file, "rb") as f:
                 blob_client.upload_blob(f)
 
         step = "Requesting Uploads table."
-        print(f"CheckStorage: {step}")
+        current_app.logger.info(f"CheckStorage: {step}")
         if current_app.config["TABLES_CONNECTION"]:
             result = create_uploads_table()
             if result:
-                print(f"OK: {result.table_name}")
+                current_app.logger.info(f"OK: {result.table_name}")
             else:
                 raise CheckStorageError("Cannot access Uploads table.")
         else:
-            print("(skip) TABLES_CONNECTION not set.")
+            current_app.logger.info("(skip) TABLES_CONNECTION not set.")
 
     except Exception as ex:
+        current_app.logger.exception(f"CheckStorage: Failed at '{step}'")
         print("Exception:")
         print(ex)
         flash(f"CheckStorage: Failed at '{step}'")

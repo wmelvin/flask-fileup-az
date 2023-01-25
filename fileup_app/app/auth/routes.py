@@ -59,7 +59,7 @@ def login():
 
         auth_url = _build_auth_url(scopes=scopes, state=session["state"])
 
-        print(f"\nAUTH:\n{auth_url}\n")
+        current_app.logger.info(f"AUTH: '{auth_url}'")
 
         return redirect(auth_url)
 
@@ -72,12 +72,19 @@ def external_foorl(endpoint: str) -> str:
     #  "https" unless running on the local development server.
     #  What is the right way to fix this? There must be some missing
     #  configuration setting for Flask.
+
+    default_url = url_for(endpoint, _external=True)
+    current_app.logger.info(f"Def ext URL: '{default_url}'")
+
     check_url = url_for("main.index", _external=True)
     if "localhost" in check_url:
         url_scheme = "http"
     else:
         url_scheme = "https"
-    return url_for(endpoint, _external=True, _scheme=url_scheme)
+
+    url = url_for(endpoint, _external=True, _scheme=url_scheme)
+    current_app.logger.info(f"Ret ext URL: '{url}'")
+    return url
 
 
 @bp.route("/signin-oidc")

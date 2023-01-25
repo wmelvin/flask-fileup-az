@@ -22,42 +22,45 @@
 . ./az-setup-init.ps1
 
 
-# -- Get the connection string.
-#    https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az-storage-account-show-connection-string-examples
+# -- REMOVE?
+# # -- Get the connection string.
+# #    https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az-storage-account-show-connection-string-examples
 
-$storageConnStr = $(
-  az storage account show-connection-string `
-    -g $rgName `
-    -n $storageAcctName `
-    --query connectionString `
-    --output tsv
-)
+# $storageConnStr = $(
+#   az storage account show-connection-string `
+#     -g $rgName `
+#     -n $storageAcctName `
+#     --query connectionString `
+#     --output tsv
+# )
 
 
-if ($storageRoleAssignee) {
-  #  If the setting for FILEUP_STORAGE_ACCOUNT_URL is empty, it will not be
-  #  in $appSettingsStr. Add that setting when using $storageRoleAssignee.
-  if (!$fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"]) {
-    Say "`nAdd setting FILEUP_STORAGE_ACCOUNT_URL`n"
-    $storageAcctUrl = "https://${storageAcctName}.blob.core.windows.net"
-    $fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"] = $storageAcctUrl
-  }
-}
-else {
-  #  When not using the DefaultAzureCredential to access blob storage,
-  #  set the connection string.
-  if (!$fileupSettings["FILEUP_STORAGE_CONNECTION"]) {
-    Say "`nAdd setting FILEUP_STORAGE_CONNECTION`n"
-    $fileupSettings["FILEUP_STORAGE_CONNECTION"] = $storageConnStr
-  }
-}
+# -- REMOVE?
+# if ($storageRoleAssignee) {
+#   #  If the setting for FILEUP_STORAGE_ACCOUNT_URL is empty, it will not be
+#   #  in $appSettingsStr. Add that setting when using $storageRoleAssignee.
+#   if (!$fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"]) {
+#     Say "`nAdd setting FILEUP_STORAGE_ACCOUNT_URL`n"
+#     $storageAcctUrl = "https://${storageAcctName}.blob.core.windows.net"
+#     $fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"] = $storageAcctUrl
+#   }
+# }
+# else {
+#   #  When not using the DefaultAzureCredential to access blob storage,
+#   #  set the connection string.
+#   if (!$fileupSettings["FILEUP_STORAGE_CONNECTION"]) {
+#     Say "`nAdd setting FILEUP_STORAGE_CONNECTION`n"
+#     $fileupSettings["FILEUP_STORAGE_CONNECTION"] = $storageConnStr
+#   }
+# }
 
-# -- Add setting for table storage connection.
+# -- REMOVE?
+# # -- Add setting for table storage connection.
 
-if (!$fileupSettings["FILEUP_TABLES_CONNECTION"]) {
-  Say "`nAdd setting FILEUP_TABLES_CONNECTION`n"
-  $fileupSettings["FILEUP_TABLES_CONNECTION"] = $storageConnStr
-}
+# if (!$fileupSettings["FILEUP_TABLES_CONNECTION"]) {
+#   Say "`nAdd setting FILEUP_TABLES_CONNECTION`n"
+#   $fileupSettings["FILEUP_TABLES_CONNECTION"] = $storageConnStr
+# }
   
 
 #  Build a settings string, to use in 'az webapp config appsettings', using the

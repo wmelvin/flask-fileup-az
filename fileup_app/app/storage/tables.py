@@ -2,6 +2,8 @@ from azure.core.exceptions import ResourceExistsError
 from azure.identity import DefaultAzureCredential
 from azure.data.tables import TableServiceClient, TableClient
 
+from flask import current_app
+
 from app.storage.settings import get_storage_connstr, get_storage_acct_url
 
 
@@ -28,7 +30,8 @@ def create_uploads_table() -> TableClient:
 
         return table_client
     except Exception as ex:
-        # TODO: Log error.
+        # TODO: Confirm error logging.
+        current_app.logger.exception("create_uploads_table")
         print("Exception:")
         print(ex)
         return None
@@ -47,7 +50,8 @@ def insert_into_uploads_table(upload_entity) -> str:
         response = uploads_table.create_entity(upload_entity)
         print(response)
     except ResourceExistsError:
-        # TODO: Do not return this error, but do log it.
-        print(f"Entity already exists for {upload_entity}")
+        #  Do not return this error, but do log it.
+        # print(f"Entity already exists for {upload_entity}")
+        current_app.logger.warn(f"Entity already exists for {upload_entity}")
 
     return ""
