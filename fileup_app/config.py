@@ -8,7 +8,14 @@ load_dotenv(os.path.join(basedir, ".env"))
 
 
 class Config(object):
-    FILEUP_VERSION = "230125.1"
+    FILEUP_VERSION = "230126.3"
+
+    #  TODO: Setting this did not affect the external URLs returned
+    #  by 'url_for' when running on Azure. It was still making 'http'
+    #  URLs. Is this because the Azure App Web App is receiving
+    #  requests through a proxy that uses 'http' internally?
+    #
+    # PREFERRED_URL_SCHEME = "https"
 
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.
