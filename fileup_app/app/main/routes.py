@@ -38,7 +38,7 @@ def upload():
     #     return redirect(url_for("auth.login"))
 
     #  Get list of accepted file extensions.
-    upload_accept = current_app.config["UPLOAD_ACCEPT"]
+    upload_accept = current_app.config.get("UPLOAD_ACCEPT")
     if upload_accept:
         assert isinstance(upload_accept, str)  # TODO: remove after live test.
         accept = upload_accept
@@ -75,7 +75,9 @@ def upload_files():
             #  The UPLOAD_ACCEPT setting is a string of comma-separated file
             #  extensions. Split it into a list for exact extension check.
             #
-            upload_accept = str(current_app.config["UPLOAD_ACCEPT"]).split(",")
+            upload_accept = str(
+                current_app.config.get("UPLOAD_ACCEPT", "")
+            ).split(",")
             if file_ext not in upload_accept:
                 flash(f"Invalid file type: '{file_ext}'")
                 return redirect(url_for(upload_url))

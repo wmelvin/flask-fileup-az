@@ -9,7 +9,7 @@ def get_storage_acct_url(endpoint: str) -> str:
     The endpoint must be 'blob' or 'table'.
     """
     assert endpoint in ["blob", "table"], "get_storage_acct_url: Bad endpoint"
-    acct_name = current_app.config["STORAGE_ACCOUNT_NAME"]
+    acct_name = current_app.config.get("STORAGE_ACCOUNT_NAME")
     if not acct_name:
         return ""
     return f"https://{acct_name}.{endpoint}.core.windows.net"
@@ -23,13 +23,13 @@ def get_storage_connstr():
     the STORAGE_ACCOUNT_KEY should be left blank in the configuration.
     If any of the config items are empty then an empty string is returned.
     """
-    acct_name = current_app.config["STORAGE_ACCOUNT_NAME"]
+    acct_name = current_app.config.get("STORAGE_ACCOUNT_NAME")
     if not acct_name:
         return ""
-    acct_key = current_app.config["STORAGE_ACCOUNT_KEY"]
+    acct_key = current_app.config.get("STORAGE_ACCOUNT_KEY")
     if not acct_key:
         return ""
-    suffix = current_app.config["STORAGE_ENDPOINT_SUFFIX"]
+    suffix = current_app.config.get("STORAGE_ENDPOINT_SUFFIX")
     if not suffix:
         return ""
     return (

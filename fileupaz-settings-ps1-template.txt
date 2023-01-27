@@ -1,3 +1,4 @@
+
 $fileupSettings = @{
     'FILEUP_SECRET_KEY'              = '';
     'FILEUP_ENABLE_FEATURES'         = '';

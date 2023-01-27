@@ -10,8 +10,10 @@ FILEUP_SECRET_KEY="<str: long-string-of-randomness-goes-here>"
 
 
 #  Use FILEUP_ENABLE_FEATURES to enable optional features.
-#    "CheckStorage" enables the /checkstorage route that checks Azure Storage
+#  * "CheckStorage" enables the /checkstorage route that checks Azure Storage
 #    Blob functions.
+#  * "LogDebug" or "LogInfo" changes the logging level to DEBUG or INFO
+#    instead of the default WARNING level.
 #
 FILEUP_ENABLE_FEATURES=""
 

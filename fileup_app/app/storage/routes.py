@@ -39,9 +39,9 @@ def store_uploaded_file(
     Returns an error message, or an empty string if no errors.
     """
     err = ""
-    if (current_app.config["STORAGE_ACCOUNT_NAME"]):
+    if current_app.config.get("STORAGE_ACCOUNT_NAME"):
         storage_name = (
-            f"AzureContainer:{current_app.config['STORAGE_CONTAINER']}"
+            f"AzureContainer:{current_app.config.get('STORAGE_CONTAINER')}"
         )
 
         # TODO: Perhaps storage_name should hold the blob URL for the uploaded
@@ -50,16 +50,19 @@ def store_uploaded_file(
 
         err = _saveToBlob(upload_filename, file_data)
     else:
-        upload_path = current_app.config["UPLOAD_PATH"]
-        storage_name = f"FileSystem:{upload_path}"
-        file_data.save(os.path.join(upload_path, upload_filename))
+        upload_path = current_app.config.get("UPLOAD_PATH")
+        if upload_path:
+            storage_name = f"FileSystem:{upload_path}"
+            file_data.save(os.path.join(upload_path, upload_filename))
+        else:
+            err = "UPLOAD_PATH not configured"
 
     if not err:
         user: User = current_user
         if user:
             user_name = user.preferred_username
         else:
-            ds = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
+            ds = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
             user_name = f"UNKNOWN_USER_{ds}"
             # print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
             current_app.logger.info(f"store_uploaded_file: {user_name}")
@@ -84,12 +87,18 @@ def _saveToBlob(file_name: str, file_data: FileStorage) -> str:
     try:
         conn_str = get_storage_connstr()
         if conn_str:
+            current_app.logger.info(
+                "Get BlobServiceClient using connection string."
+            )
             service_client: BlobServiceClient = (
                 BlobServiceClient.from_connection_string(conn_str)
             )
         else:
             acct_url = get_storage_acct_url("blob")
             if acct_url:
+                current_app.logger.info(
+                    "Get BlobServiceClient using default credential."
+                )
                 default_cred = DefaultAzureCredential()
                 service_client: BlobServiceClient = BlobServiceClient(
                     acct_url, credential=default_cred
@@ -97,7 +106,9 @@ def _saveToBlob(file_name: str, file_data: FileStorage) -> str:
             else:
                 return "Upload failed: Missing storage configuration."
 
-        container_name = current_app.config["STORAGE_CONTAINER"]
+        container_name = current_app.config.get("STORAGE_CONTAINER")
+        if not container_name:
+            return "Upload failed: Container name not configured."
 
         container_client: ContainerClient = (
             service_client.get_container_client(container_name)
@@ -121,45 +132,48 @@ def _saveToBlob(file_name: str, file_data: FileStorage) -> str:
         )
 
         if blob_client.exists():
-            # print(f"Blob exists: '{blob_client.blob_name}'")
-            current_app.logger.info(f"Blob exists: '{blob_client.blob_name}'")
+            current_app.logger.warning(
+                f"Blob exists: '{blob_client.blob_name}'"
+            )
         else:
+            current_app.logger.info("Uploading file data.")
             blob_client.upload_blob(file_data)
 
         return ""
 
     except Exception:
-        # print("Exception:")
-        # print(ex)
         current_app.logger.exception("_saveToBlob failed")
         return "Exception - upload failed"
 
 
 @bp.route("/checkstorage", methods=["GET"])
 def check_storage():
-    if "CheckStorage" not in current_app.config["ENABLE_FEATURES"]:
+    if "CheckStorage" not in current_app.config.get("ENABLE_FEATURES", ""):
         return redirect(url_for("main.index"))
 
     try:
         step = "Requesting service client."
         current_app.logger.info(f"CheckStorage: {step}")
-        acct_url = current_app.config["STORAGE_ACCOUNT_URL"]
-        if acct_url:
-            default_cred = DefaultAzureCredential()
-            service_client: BlobServiceClient = BlobServiceClient(
-                acct_url, credential=default_cred
-            )
-        else:
-            conn_str = current_app.config["STORAGE_CONNECTION"]
-            if not conn_str:
-                flash("CheckStorage: Not configured to access storage.")
-                return redirect(url_for("main.index"))
 
+        conn_str = get_storage_connstr()
+        if conn_str:
             service_client: BlobServiceClient = (
                 BlobServiceClient.from_connection_string(conn_str)
             )
+        else:
+            acct_url = get_storage_acct_url("blob")
+            if acct_url:
+                default_cred = DefaultAzureCredential()
+                service_client: BlobServiceClient = BlobServiceClient(
+                    acct_url, credential=default_cred
+                )
+            else:
+                flash("CheckStorage: Not configured to access storage.")
+                return redirect(url_for("main.index"))
 
-        container_name = "fileup"
+        container_name = current_app.config.get("STORAGE_CONTAINER")
+        if not container_name:
+            return "Upload failed: Container name not configured."
 
         step = "Requesting container client."
         current_app.logger.info(f"CheckStorage: {step}")
@@ -195,14 +209,15 @@ def check_storage():
 
         step = "Requesting Uploads table."
         current_app.logger.info(f"CheckStorage: {step}")
-        if current_app.config["TABLES_CONNECTION"]:
+
+        if get_storage_connstr() or get_storage_acct_url("table"):
             result = create_uploads_table()
             if result:
                 current_app.logger.info(f"OK: {result.table_name}")
             else:
                 raise CheckStorageError("Cannot access Uploads table.")
         else:
-            current_app.logger.info("(skip) TABLES_CONNECTION not set.")
+            current_app.logger.info("(skip) Not configured for table access.")
 
     except Exception as ex:
         current_app.logger.exception(f"CheckStorage: Failed at '{step}'")

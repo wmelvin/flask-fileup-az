@@ -48,7 +48,7 @@ def login():
     form = LoginFormMsal()
 
     if form.validate_on_submit():  # Always returns False for GET request.
-        scopes = current_app.config["MSAL_SCOPE"]
+        scopes = current_app.config.get("MSAL_SCOPE")
 
         #  The 'state' value is returned in the response to the redirect URI.
         #  Encode the remember-me setting in the first character.
@@ -115,7 +115,7 @@ def authorized():
             cache=cache
         ).acquire_token_by_authorization_code(
             request.args["code"],
-            scopes=current_app.config["MSAL_SCOPE"],
+            scopes=current_app.config.get("MSAL_SCOPE"),
             redirect_uri=external_foorl("auth.authorized"),
         )
 
@@ -138,7 +138,7 @@ def authorized():
 @login_required
 def logout():
     session.clear()
-    uri = current_app.config["MSAL_AUTHORITY"]
+    uri = current_app.config.get("MSAL_AUTHORITY", "")
     uri += "/oauth2/v2.0/logout?post_logout_redirect_uri="
     uri += url_for("main.index", _external=True)
     return redirect(uri)
@@ -174,9 +174,9 @@ def get_current_user():
 
 def _build_msal_app(cache=None, authority=None):
     return msal.ConfidentialClientApplication(
-        current_app.config["MSAL_CLIENT_ID"],
-        authority=authority or current_app.config["MSAL_AUTHORITY"],
-        client_credential=current_app.config["MSAL_CLIENT_SECRET"],
+        current_app.config.get("MSAL_CLIENT_ID", ""),
+        authority=authority or current_app.config.get("MSAL_AUTHORITY"),
+        client_credential=current_app.config.get("MSAL_CLIENT_SECRET", ""),
         token_cache=cache,
     )
 

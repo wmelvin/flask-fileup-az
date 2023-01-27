@@ -41,9 +41,10 @@ def insert_into_uploads_table(upload_entity) -> str:
     """
     Returns an error message, or an empty string if no errors.
     """
+    current_app.logger.info(f"Uploads: Insert '{upload_entity.get('RowKey')}'")
     uploads_table = create_uploads_table()
     if not uploads_table:
-        # TODO: Log error.
+        current_app.logger.error("Failed to access Uploads table.")
         return "Failed to access Uploads table."
 
     try:
@@ -52,6 +53,7 @@ def insert_into_uploads_table(upload_entity) -> str:
     except ResourceExistsError:
         #  Do not return this error, but do log it.
         # print(f"Entity already exists for {upload_entity}")
-        current_app.logger.warn(f"Entity already exists for {upload_entity}")
-
+        current_app.logger.warning(
+            f"Entity already exists for {upload_entity}"
+        )
     return ""
