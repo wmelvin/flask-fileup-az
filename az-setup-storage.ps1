@@ -66,7 +66,7 @@ if ($storageRoleAssignee) {
 
 
 
-# -- Create storage container.
+# -- Create storage container for blob data.
 #    https://docs.microsoft.com/en-us/cli/azure/storage/container?view=azure-cli-latest#az-storage-container-create
 
 Say "`nSTEP - Create Storage Container: $storageContainerName`n"
@@ -77,15 +77,20 @@ az storage container create `
   --name $storageContainerName
 
 
+# -- Create Uploads table.
+#    https://learn.microsoft.com/en-us/cli/azure/storage/table?view=azure-cli-latest#az-storage-table-create
+
+Say "`nSTEP - Create Storage Table: $storageTableName`n"
+
+az storage table create `
+  --account-key $storageKey `
+  --account-name $storageAcctName `
+  --name $storageTableName
+
+
+
 # ----------------------------------------------------------------------
 # Additional commands and information.
-
-
-# -- Zip deploy (update $zipFile value before running).
-#    https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-deploy
-#
-# $zipFile = "../deploy/fileup_20230112_01.zip"
-# az webapp deploy --name $webAppName -g $rgName --src-path $zipFile
 
 
 # -- List resources.

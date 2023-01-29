@@ -8,7 +8,7 @@ load_dotenv(os.path.join(basedir, ".env"))
 
 
 class Config(object):
-    FILEUP_VERSION = "230127.5"
+    FILEUP_VERSION = "230129.1"
 
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.

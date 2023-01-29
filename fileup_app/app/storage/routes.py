@@ -64,7 +64,6 @@ def store_uploaded_file(
         else:
             ds = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
             user_name = f"UNKNOWN_USER_{ds}"
-            # print(f"store_uploaded_file: {user_name}")  # TODO: Log this.
             current_app.logger.info(f"store_uploaded_file: {user_name}")
 
         uf: UploadedFile = UploadedFile(

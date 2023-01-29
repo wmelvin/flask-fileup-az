@@ -128,6 +128,29 @@ az webapp config appsettings set `
     --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
 
 
+# -- Enable logging to filesystem.
+#    https://learn.microsoft.com/en-us/cli/azure/webapp/log?view=azure-cli-latest#az-webapp-log-config
+
+#  Method 1:
+# az webapp log config `
+#   -g $rgName `
+#   --name $webAppName `
+#   --web-server-logging filesystem
+
+#  Method 2:
+#  Use resource properties to enable logging and set the log quota (MB).
+
+$webappResourceId = (az webapp show -g $rgName -n $webAppName --query id)
+
+#  The properties to set are on the <webapp>/config/web resource.
+$webConfigResource = "${webappResourceId}/config/web"
+
+# az resource show --ids $webConfigResource
+az resource update --ids $webConfigResource --set properties.httpLoggingEnabled=true
+az resource update --ids $webConfigResource --set properties.logsDirectorySizeLimit=44
+
+
+
 # -- Configure settings for the web app. These are available to the app as environment variables.
 #    https://learn.microsoft.com/en-us/cli/azure/webapp/config/appsettings?view=azure-cli-latest
 
@@ -148,6 +171,15 @@ Say "`nSTEP - Configure startup command for: $webAppName`n"
 
 $startCmd = "gunicorn --bind=0.0.0.0 --timeout 600 --chdir fileup_app fileup:app"
 az webapp config set -g $rgName --name $webAppName --startup-file $startCmd
+
+
+####
+
+# -- Create a system-assigned managed identity for the web app.
+#    https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=cli%2Chttp#add-a-system-assigned-identity
+
+az webapp identity assign  -g $rgName -n $webAppName
+
 
 
 # ----------------------------------------------------------------------

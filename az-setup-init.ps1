@@ -74,12 +74,15 @@ if (!$storageContainerName) {
   $storageContainerName = "fileup"
 }
 
+$storageTableName = "Uploads"
+
 Say "INFO:               rgName = '$rgName'"
 Say "INFO:             location = '$location'"
 Say "INFO:       appServiceName = '$appServiceName'"
 Say "INFO:           webAppName = '$webAppName'"
 Say "INFO:      storageAcctName = '$storageAcctName'"
 Say "INFO: storageContainerName = '$storageContainerName'"
+Say "INFO: storageTableName     = '$storageTableName'"
 
 
 # ======================================================================
