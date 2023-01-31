@@ -23,12 +23,12 @@
 # ======================================================================
 # Create and configure Azure resources.
 
-if (RGExists($rgName)) {
-    Say "`nResource group exists: $rgName`n"
+if (RGExists($storageRG)) {
+    Say "`nResource group exists: $storageRG`n"
 }
 else {
-    Say "`nSTEP - Create resource group: $rgName`n"
-    az group create -n $rgName -l $location
+    Say "`nSTEP - Create resource group: $storageRG`n"
+    az group create -n $storageRG -l $location
 }
 
 
@@ -37,14 +37,14 @@ Say "`nSTEP - Create Storage Account: $storageAcctName`n"
 # -- Create the Storage Account.
 #    https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az-storage-account-create
 
-az storage account create -n $storageAcctName -l $location -g $rgName --sku Standard_LRS
+az storage account create -n $storageAcctName -l $location -g $storageRG --sku Standard_LRS
 
 
 # -- Get the storage account key.
 #    Example found in Microsoft Docs: "Mount a file share to a Python function app - Azure CLI"
 #    https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-mount-files-storage-linux
 
-$storageKey = $(az storage account keys list -g $rgName -n $storageAcctName --query '[0].value' -o tsv)
+$storageKey = $(az storage account keys list -g $storageRG -n $storageAcctName --query '[0].value' -o tsv)
 
 
 # -- Assign role to access blob storage. Used for DefaultAzureCredential to
@@ -55,7 +55,7 @@ $storageKey = $(az storage account keys list -g $rgName -n $storageAcctName --qu
 
 if ($storageRoleAssignee) {
   Say "`nSTEP - Assign blob data access role for : $storageAcctName`n"
-  $storageResourceId = $(az storage account show -g $rgName -n $storageAcctName --query id)
+  $storageResourceId = $(az storage account show -g $storageRG -n $storageAcctName --query id)
 
   az role assignment create `
     --assignee $storageRoleAssignee `
@@ -95,7 +95,7 @@ az storage table create `
 
 # -- List resources.
 #
-# az resource list -g $rgName -o table
+# az resource list -g $storageRG -o table
 
 
 # ======================================================================

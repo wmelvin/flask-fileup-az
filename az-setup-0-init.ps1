@@ -9,7 +9,8 @@
 #
 # ----------------------------------------------------------------------
 
-. .\az-setup-funcs.ps1  # Define some functions.
+# Source function definitions.
+. .\az-funcs.ps1  
 
 $baseName = "fileupaz"
 $uniqtag = "01"
@@ -63,7 +64,11 @@ CheckKeyExists "FILEUP_STORAGE_ENDPOINT_SUFFIX"
 
 # -- Assign additional variables used in this script.
 
-$rgName = "${baseName}_rg"
+# -- Put storage and webapp in different resource groups
+#    (or give them the same name to use a single group).
+$storageRG = "${baseName}_storage_rg"
+$webappRG = "${baseName}_webapp_rg"
+
 $location = "eastus"
 $appServiceName = "${baseName}${uniqtag}appserv"
 $webAppName = "${baseName}${uniqtag}webapp"
@@ -76,7 +81,8 @@ if (!$storageContainerName) {
 
 $storageTableName = "Uploads"
 
-Say "INFO:               rgName = '$rgName'"
+Say "INFO:            storageRG = '$storageRG'"
+Say "INFO:             webappRG = '$webappRG'"
 Say "INFO:             location = '$location'"
 Say "INFO:       appServiceName = '$appServiceName'"
 Say "INFO:           webAppName = '$webAppName'"

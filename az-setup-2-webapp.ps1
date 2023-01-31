@@ -22,47 +22,6 @@
 . ./az-setup-init.ps1
 
 
-# -- REMOVE?
-# # -- Get the connection string.
-# #    https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az-storage-account-show-connection-string-examples
-
-# $storageConnStr = $(
-#   az storage account show-connection-string `
-#     -g $rgName `
-#     -n $storageAcctName `
-#     --query connectionString `
-#     --output tsv
-# )
-
-
-# -- REMOVE?
-# if ($storageRoleAssignee) {
-#   #  If the setting for FILEUP_STORAGE_ACCOUNT_URL is empty, it will not be
-#   #  in $appSettingsStr. Add that setting when using $storageRoleAssignee.
-#   if (!$fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"]) {
-#     Say "`nAdd setting FILEUP_STORAGE_ACCOUNT_URL`n"
-#     $storageAcctUrl = "https://${storageAcctName}.blob.core.windows.net"
-#     $fileupSettings["FILEUP_STORAGE_ACCOUNT_URL"] = $storageAcctUrl
-#   }
-# }
-# else {
-#   #  When not using the DefaultAzureCredential to access blob storage,
-#   #  set the connection string.
-#   if (!$fileupSettings["FILEUP_STORAGE_CONNECTION"]) {
-#     Say "`nAdd setting FILEUP_STORAGE_CONNECTION`n"
-#     $fileupSettings["FILEUP_STORAGE_CONNECTION"] = $storageConnStr
-#   }
-# }
-
-# -- REMOVE?
-# # -- Add setting for table storage connection.
-
-# if (!$fileupSettings["FILEUP_TABLES_CONNECTION"]) {
-#   Say "`nAdd setting FILEUP_TABLES_CONNECTION`n"
-#   $fileupSettings["FILEUP_TABLES_CONNECTION"] = $storageConnStr
-# }
-  
-
 #  Build a settings string, to use in 'az webapp config appsettings', using the
 #  key=value pairs in the $fileupSettings dictionary loaded from $keysFile.
 
@@ -82,13 +41,14 @@ foreach ($key in $fileupSettings.Keys) {
 # ======================================================================
 # Create and configure Azure resources.
 
-if (RGExists($rgName)) {
-    Say "`nResource group exists: $rgName`n"
+if (RGExists($webappRG)) {
+  Say "`nResource group exists: $webappRG`n"
 }
 else {
-    Say "`nSTEP - Create resource group: $rgName`n"
-    az group create -n $rgName -l $location
+  Say "`nSTEP - Create resource group: $webappRG`n"
+  az group create -n $webappRG -l $location
 }
+
 
 
 # -- Create the App Service Plan (Linux).
@@ -98,7 +58,7 @@ Say "`nSTEP - Create App Service Plan: $appServiceName`n"
 
 az appservice plan create `
   --name $appServiceName `
-  --resource-group $rgName `
+  --resource-group $webappRG `
   --is-linux `
   --sku s1
 
@@ -111,7 +71,7 @@ az appservice plan create `
 Say "`nSTEP - Create Web App: $webAppName`n"
 
 az webapp create `
-  -g $rgName `
+  -g $webappRG `
   -p $appServiceName `
   --name $webAppName `
   --runtime "PYTHON:3.10"
@@ -123,7 +83,7 @@ az webapp create `
 Say "`nSTEP - Configure settings for: $webAppName`n"
 
 az webapp config appsettings set `
-    -g $rgName `
+    -g $webappRG `
     --name $webAppName `
     --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
 
@@ -133,14 +93,14 @@ az webapp config appsettings set `
 
 #  Method 1:
 # az webapp log config `
-#   -g $rgName `
+#   -g $webappRG `
 #   --name $webAppName `
 #   --web-server-logging filesystem
 
 #  Method 2:
 #  Use resource properties to enable logging and set the log quota (MB).
 
-$webappResourceId = (az webapp show -g $rgName -n $webAppName --query id)
+$webappResourceId = (az webapp show -g $webappRG -n $webAppName --query id)
 
 #  The properties to set are on the <webapp>/config/web resource.
 $webConfigResource = "${webappResourceId}/config/web"
@@ -160,7 +120,7 @@ Say "`nSTEP - Configure web app settings for: $webAppName`n"
 #  In order to treat the settings in $appSettingsStr as separate arguments that
 #  follow '--settings', create the az command as an expression and invoke it.
 
-$expr = "az webapp config appsettings set -g $rgName --name $webAppName --settings $appSettingsStr"
+$expr = "az webapp config appsettings set -g $webappRG --name $webAppName --settings $appSettingsStr"
 Invoke-Expression $expr
 
 
@@ -170,15 +130,7 @@ Invoke-Expression $expr
 Say "`nSTEP - Configure startup command for: $webAppName`n"
 
 $startCmd = "gunicorn --bind=0.0.0.0 --timeout 600 --chdir fileup_app fileup:app"
-az webapp config set -g $rgName --name $webAppName --startup-file $startCmd
-
-
-####
-
-# -- Create a system-assigned managed identity for the web app.
-#    https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=cli%2Chttp#add-a-system-assigned-identity
-
-az webapp identity assign  -g $rgName -n $webAppName
+az webapp config set -g $webappRG --name $webAppName --startup-file $startCmd
 
 
 
@@ -186,16 +138,9 @@ az webapp identity assign  -g $rgName -n $webAppName
 # Additional commands and information.
 
 
-# -- Zip deploy (update $zipFile value before running).
-#    https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-deploy
-#
-# $zipFile = "../deploy/fileup_deploy.zip"
-# az webapp deploy --name $webAppName -g $rgName --src-path $zipFile
-
-
 # -- List resources.
 #
-# az resource list -g $rgName -o table
+# az resource list -g $webappRG -o table
 
 
 # ======================================================================
