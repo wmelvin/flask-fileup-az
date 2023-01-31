@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------
 
 # -- Source the initialization script.
-. ./az-setup-init.ps1
+. ./az-setup-0-init.ps1
 
 
 # -- Create a system-assigned managed identity for the web app.
@@ -48,8 +48,5 @@ $tableRoleId = (az role definition list --name "Storage Table Data Contributor" 
 az role assignment create --assignee $webappIdentityId --role $blobRoleId --scope $blobResId
 az role assignment create --assignee $webappIdentityId --role $tableRoleId --scope $tableResId
 
-
-# *!* Does this work?
-# az role assignment list -g $webappRG
 
 # ======================================================================

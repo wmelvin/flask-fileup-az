@@ -4,7 +4,7 @@
 
 
 # -- Source the initialization script.
-. ./az-setup-init.ps1
+. ./az-setup-0-init.ps1
 
 
 # -- Deploy the webapp ZIP file.

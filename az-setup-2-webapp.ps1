@@ -19,7 +19,7 @@
 # ======================================================================
 
 # -- Source the initialization script.
-. ./az-setup-init.ps1
+. ./az-setup-0-init.ps1
 
 
 #  Build a settings string, to use in 'az webapp config appsettings', using the
