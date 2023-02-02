@@ -209,12 +209,14 @@ def check_storage():
         step = "Requesting Uploads table."
         current_app.logger.info(f"CheckStorage: {step}")
 
-        if get_storage_connstr() or get_storage_acct_url("table"):
+        if current_app.config.get("STORAGE_TABLE") and (
+            get_storage_connstr() or get_storage_acct_url("table")
+        ):
             result = create_uploads_table()
             if result:
                 current_app.logger.info(f"OK: {result.table_name}")
             else:
-                raise CheckStorageError("Cannot access Uploads table.")
+                raise CheckStorageError("Cannot access uploads table.")
         else:
             current_app.logger.info("(skip) Not configured for table access.")
 

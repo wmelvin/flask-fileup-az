@@ -8,6 +8,13 @@ from app.storage.settings import get_storage_connstr, get_storage_acct_url
 
 
 def create_uploads_table() -> TableClient:
+    table_name = current_app.config.get("STORAGE_TABLE")
+    if not table_name:
+        current_app.logger.info(
+            "create_uploads_table: Skip because STORAGE_TABLE not set."
+        )
+        return None
+
     try:
         conn_str = get_storage_connstr()
         if conn_str:
@@ -25,7 +32,7 @@ def create_uploads_table() -> TableClient:
                 return None
 
         table_client = service_client.create_table_if_not_exists(
-            table_name="Uploads"
+            table_name=table_name
         )
 
         return table_client
@@ -41,6 +48,12 @@ def insert_into_uploads_table(upload_entity) -> str:
     """
     Returns an error message, or an empty string if no errors.
     """
+    if not current_app.config.get("STORAGE_TABLE"):
+        current_app.logger.info(
+            "insert_into_uploads_table: Skip because STORAGE_TABLE not set."
+        )
+        return ""
+
     current_app.logger.info(f"Uploads: Insert '{upload_entity.get('RowKey')}'")
     uploads_table = create_uploads_table()
     if not uploads_table:

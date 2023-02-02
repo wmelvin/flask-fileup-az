@@ -87,6 +87,8 @@ def external_foorl(endpoint: str) -> str:
     return url
 
 
+# TODO: Use config setting for redirect route?
+
 @bp.route("/signin-oidc")
 def authorized():
     s = session.get("state")

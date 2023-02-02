@@ -11,6 +11,67 @@ Rather than clone that project, and bring along all of its history, a ZIP downlo
 A new Git repository was created after pruning the code and successfully running the main functions of the app locally (the Flask app ran in the local development server, but was connected to live Azure resources).
 
 
+## Configuration
+
+### Environment Variables
+
+The following envirionment variables configure the application:
+
+```sh
+FILEUP_SECRET_KEY=""
+FILEUP_ENABLE_FEATURES=""
+FILEUP_UPLOAD_ACCEPT=""
+FILEUP_MAX_UPLOAD_MB=""
+FILEUP_MSAL_REDIRECT_PATH=""
+FILEUP_MSAL_AUTHORITY=""
+FILEUP_MSAL_CLIENT_ID=""
+FILEUP_MSAL_CLIENT_SECRET=""
+FILEUP_MSAL_SCOPE=""
+FILEUP_STORAGE_CONTAINER=""
+FILEUP_STORAGE_ACCOUNT_NAME=""
+FILEUP_STORAGE_ACCOUNT_KEY=""
+FILEUP_STORAGE_ENDPOINT_SUFFIX=""
+```
+
+The puropse of each environment variable is described below.
+
+#### Web Application Settings
+
+**`FILEUP_SECRET_KEY`** Sets the Flask [SECRET_KEY](https://flask.palletsprojects.com/en/latest/config/?highlight=secret_key#SECRET_KEY).
+
+**`FILEUP_ENABLE_FEATURES`** - Enable optional features in the application. Options are enabled using option names. Enable multiple options be separating the names with a space. **Option Names:** `CheckStorage` enables a `/checkstorage` route that calls a function to ckeck access to Azure Blob and Table storage. `LogInfo` sets the Flask logging level to `INFO`. `LogDebug` sets the Flask logging level to `DEBUG` (default logging level is `WARNING`).
+
+**`FILEUP_UPLOAD_ACCEPT`** - Comma-separated list of file types (extensions) to accept in uploaded file names. The default settings is `".csv,.xls,.xlsx"`. This is used limit the upload file selection on the client side (form input field) and for server-side file name validation.
+
+**`FILEUP_MAX_UPLOAD_MB`** - Maximum allowed file size, in megabytes, for uploaded files. If not set, the default maximum size is 2 MB.
+
+
+#### User Identity (Authentication/Authorization) Settings
+
+**`FILEUP_MSAL_REDIRECT_PATH`** - *Not yet implemented - currently hard-coded as* `"/signin-oidc"`
+
+**`FILEUP_MSAL_AUTHORITY`** - Authority to which the web app delegates sign-in. In this case, the Azure Active Directory providing user identity. (TODO: More detail; links to docs)
+
+**`FILEUP_MSAL_CLIENT_ID`** - Client ID assigned to the **App Registration** in Azure Active Directory. (TODO: More detail; links to docs)
+
+**`FILEUP_MSAL_CLIENT_SECRET`** - Client Secret assigned to the App Registration (Azure Active Directory). (TODO: More detail; links to docs)
+
+**`FILEUP_MSAL_SCOPE`** - *Currently left blank - not used*
+
+
+#### Azure Storage Settings
+
+**`FILEUP_STORAGE_CONTAINER`** - Name of the Blob container, in an Azure Storage Account, that receives uploaded files. Container name must be all lower case. If not set, the default is `fileup`. (TODO: More detail; links to docs)
+
+**`FILEUP_STORAGE_ACCOUNT_NAME`** - Name of the Azure Storage Account. (TODO: More detail; links to docs)
+
+**`FILEUP_STORAGE_ACCOUNT_KEY`** - Azure Storage Account **Key** to use in connection strings. Leave blank when using IAM roles, instead of connection strings, to access storage. (TODO: More detail; links to docs)
+
+**`FILEUP_STORAGE_ENDPOINT_SUFFIX`** - Suffix used to construct URLs for storage targets. Used to build connection strings. (TODO: More detail; links to docs)
+
+
+---
+
 ## Reference Links
 
 ### Flask

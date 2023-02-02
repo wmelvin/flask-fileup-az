@@ -17,6 +17,10 @@ FILEUP_SECRET_KEY="<str: long-string-of-randomness-goes-here>"
 #
 FILEUP_ENABLE_FEATURES=""
 
+#  List of file types (extensions) to accept in uploaded file names.
+#
+FILEUP_UPLOAD_ACCEPT=".csv,.xls,.xlsx"
+
 
 FILEUP_MAX_UPLOAD_MB=<int>
 
@@ -30,17 +34,21 @@ FILEUP_MSAL_CLIENT_SECRET=""
 FILEUP_MSAL_SCOPE=""
 
 
-#  Set FILEUP_STORAGE_CONTAINER to the Azure Storage container name.
+#  Used for both connection strings and account URLs. Required.
+#
+FILEUP_STORAGE_ACCOUNT_NAME=""
+
+
+#  Set FILEUP_STORAGE_CONTAINER to the Azure Storage (blob) container name.
 #  Container names must be all lower case.
 #  If not set, the default is 'fileup'.
 #
 FILEUP_STORAGE_CONTAINER=""
 
-
-#  Used for both connection strings as account URLs. Required.
+#  Set FILEUP_STORAGE_TABLE to the Azure Storage Table name.
+#  If not set, table operations are disabled.
 #
-FILEUP_STORAGE_ACCOUNT_NAME=""
-
+FILEUP_STORAGE_TABLE=""
 
 #  Set these two to use connection strings. If either of these is not set
 #  then the DefaultAzureCredential is used instead of connection strings.

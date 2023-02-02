@@ -8,7 +8,7 @@ load_dotenv(os.path.join(basedir, ".env"))
 
 
 class Config(object):
-    FILEUP_VERSION = "230129.1"
+    FILEUP_VERSION = "230202.1"
 
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.
@@ -31,7 +31,11 @@ class Config(object):
 
     # -- Configuration for MSAL.
 
-    MSAL_REDIRECT_PATH = os.environ.get("FILEUP_MSAL_REDIRECT_PATH", "")
+    MSAL_REDIRECT_PATH = (
+        os.environ.get("FILEUP_MSAL_REDIRECT_PATH") or "/signin-oidc"
+    )
+    # TODO: Use this? Currently hard-coded as "/signin-oidc" in auth/routes.
+
     MSAL_AUTHORITY = os.environ.get("FILEUP_MSAL_AUTHORITY", "")
     MSAL_CLIENT_ID = os.environ.get("FILEUP_MSAL_CLIENT_ID", "")
     MSAL_CLIENT_SECRET = os.environ.get("FILEUP_MSAL_CLIENT_SECRET", "")
@@ -41,9 +45,11 @@ class Config(object):
 
     # -- Configuration for Azure Storage.
 
+    STORAGE_ACCOUNT_NAME = os.environ.get("FILEUP_STORAGE_ACCOUNT_NAME", "")
+
     STORAGE_CONTAINER = os.environ.get("FILEUP_STORAGE_CONTAINER") or "fileup"
 
-    STORAGE_ACCOUNT_NAME = os.environ.get("FILEUP_STORAGE_ACCOUNT_NAME", "")
+    STORAGE_TABLE = os.environ.get("FILEUP_STORAGE_TABLE", "")
 
     STORAGE_ACCOUNT_KEY = os.environ.get("FILEUP_STORAGE_ACCOUNT_KEY", "")
 
