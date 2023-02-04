@@ -27,8 +27,9 @@ FILEUP_MSAL_AUTHORITY=""
 FILEUP_MSAL_CLIENT_ID=""
 FILEUP_MSAL_CLIENT_SECRET=""
 FILEUP_MSAL_SCOPE=""
-FILEUP_STORAGE_CONTAINER=""
 FILEUP_STORAGE_ACCOUNT_NAME=""
+FILEUP_STORAGE_CONTAINER=""
+FILEUP_STORAGE_TABLE=""
 FILEUP_STORAGE_ACCOUNT_KEY=""
 FILEUP_STORAGE_ENDPOINT_SUFFIX=""
 ```
@@ -65,9 +66,11 @@ The puropse of each environment variable is described below.
 
 #### Azure Storage Settings
 
-**`FILEUP_STORAGE_CONTAINER`** - Name of the Blob container, in an Azure Storage Account, that receives uploaded files. Container name must be all lower case. If not set, the default is `fileup`. (TODO: More detail; links to docs)
-
 **`FILEUP_STORAGE_ACCOUNT_NAME`** - Name of the Azure Storage Account. (TODO: More detail; links to docs)
+
+**`FILEUP_STORAGE_CONTAINER`** - Name of the Blob container, in the Azure Storage Account, that receives uploaded files. Container name must be all lower case. If not set, the default is `fileup`. (TODO: More detail; links to docs)
+
+**`FILEUP_STORAGE_TABLE`** - Name of the table, in the Azure Storage Account, that receives data about uploaded files. This is optional. If not set, files can still be uploaded to blob storage, but no data about the uploads is recorded.
 
 **`FILEUP_STORAGE_ACCOUNT_KEY`** - Azure Storage Account **Key** to use in connection strings. Leave blank when using IAM roles, instead of connection strings, to access storage. (TODO: More detail; links to docs)
 
