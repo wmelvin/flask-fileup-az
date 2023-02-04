@@ -57,6 +57,7 @@ CheckKeyExists "FILEUP_MSAL_CLIENT_ID"
 CheckKeyExists "FILEUP_MSAL_CLIENT_SECRET"
 CheckKeyExists "FILEUP_MSAL_SCOPE"
 CheckKeyExists "FILEUP_STORAGE_CONTAINER"
+CheckKeyExists "FILEUP_STORAGE_TABLE"
 CheckKeyExists "FILEUP_STORAGE_ACCOUNT_NAME"
 CheckKeyExists "FILEUP_STORAGE_ACCOUNT_KEY"
 CheckKeyExists "FILEUP_STORAGE_ENDPOINT_SUFFIX"
@@ -66,8 +67,10 @@ CheckKeyExists "FILEUP_STORAGE_ENDPOINT_SUFFIX"
 
 # -- Put storage and webapp in different resource groups
 #    (or give them the same name to use a single group).
-$storageRG = "${baseName}_storage_rg"
-$webappRG = "${baseName}_webapp_rg"
+# $storageRG = "${baseName}_storage_rg"
+# $webappRG = "${baseName}_webapp_rg"
+$storageRG = "${baseName}_rg"
+$webappRG = "${baseName}_rg"
 
 $location = "eastus"
 $appServiceName = "${baseName}${uniqtag}appserv"
