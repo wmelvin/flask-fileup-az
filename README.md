@@ -39,7 +39,11 @@ The puropse of each environment variable is described below.
 
 **`FILEUP_SECRET_KEY`** Sets the Flask [SECRET_KEY](https://flask.palletsprojects.com/en/latest/config/?highlight=secret_key#SECRET_KEY).
 
-**`FILEUP_ENABLE_FEATURES`** - Enable optional features in the application. Options are enabled using option names. Enable multiple options be separating the names with a space. **Option Names:** `CheckStorage` enables a `/checkstorage` route that calls a function to ckeck access to Azure Blob and Table storage. `LogInfo` sets the Flask logging level to `INFO`. `LogDebug` sets the Flask logging level to `DEBUG` (default logging level is `WARNING`).
+**`FILEUP_ENABLE_FEATURES`** - Enable optional features in the application. Options are enabled using option names. Enable multiple options by separating the names with a space.
+* `AddPrefix` enables adding a "upload-*date_time*-" prefix to the name of uploaded files.
+* `CheckStorage` enables a `/checkstorage` route that calls a function to ckeck access to Azure Blob and Table storage. 
+* `LogInfo` sets the Flask logging level to `INFO` (default logging level is `WARNING`).
+* `LogDebug` sets the Flask logging level to `DEBUG` (most verbose).
 
 **`FILEUP_UPLOAD_ACCEPT`** - Comma-separated list of file types (extensions) to accept in uploaded file names. The default settings is `".csv,.xls,.xlsx"`. This is used limit the upload file selection on the client side (form input field) and for server-side file name validation.
 

@@ -83,9 +83,12 @@ def upload_files():
                 return redirect(url_for(upload_url))
 
             dt_utc = datetime.now(timezone.utc)
-            dt_str = dt_utc.strftime("%Y%m%d_%H%M%S_%f")
 
-            upload_filename = f"upload-{dt_str}-{file_name}"
+            if "AddPrefix" in current_app.config.get("ENABLE_FEATURES", ""):
+                dt_str = dt_utc.strftime("%Y%m%d_%H%M%S_%f")
+                upload_filename = f"upload-{dt_str}-{file_name}"
+            else:
+                upload_filename = file_name
 
             err = store_uploaded_file(
                 upload_filename, file_name, dt_utc, up_file
