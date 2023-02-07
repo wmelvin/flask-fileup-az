@@ -1,6 +1,7 @@
 
 $fileupSettings = @{
     'FILEUP_SECRET_KEY'              = '';
+    'FILEUP_PROXY_LEVEL'             = '1'
     'FILEUP_ENABLE_FEATURES'         = '';
     'FILEUP_UPLOAD_ACCEPT'           = '.csv,.xls,.xlsx'
     'FILEUP_MAX_UPLOAD_MB'           = '';

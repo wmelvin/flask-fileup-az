@@ -9,6 +9,15 @@
 FILEUP_SECRET_KEY="<str: long-string-of-randomness-goes-here>"
 
 
+#  A setting other than zero enables the Proxy Fix as described here:
+#    https://werkzeug.palletsprojects.com/en/0.16.x/middleware/proxy_fix/
+#    https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/
+#
+#  Set to 1 when behind one proxy, such as when running on Azure.
+#
+FILEUP_PROXY_LEVEL=0
+
+
 #  Use FILEUP_ENABLE_FEATURES to enable optional features.
 #  * 'AddPrefix' enables adding a "upload-<date_time>-" prefix to the name of
 #    uploaded files.

@@ -47,6 +47,11 @@ def login():
 
     form = LoginFormMsal()
 
+    # # TODO: Remove this debugging code.
+    # current_app.logger.info(f"REQUEST: {request.base_url}")
+    # for hdr in request.headers:
+    #     current_app.logger.info(f"HEADER: {hdr}")
+
     if form.validate_on_submit():  # Always returns False for GET request.
         scopes = current_app.config.get("MSAL_SCOPE")
 
@@ -64,27 +69,6 @@ def login():
         return redirect(auth_url)
 
     return render_template("login.html", form=form)
-
-
-def external_foorl(endpoint: str) -> str:
-    #  TODO: This is a kludge to try to fix the issue that, when deployed
-    #  to Azure, the auth_url is using the "http" scheme. It should be
-    #  "https" unless running on the local development server.
-    #  What is the right way to fix this? There must be some missing
-    #  configuration setting for Flask.
-
-    default_url = url_for(endpoint, _external=True)
-    current_app.logger.info(f"Def ext URL: '{default_url}'")
-
-    check_url = url_for("main.index", _external=True)
-    if "localhost" in check_url:
-        url_scheme = "http"
-    else:
-        url_scheme = "https"
-
-    url = url_for(endpoint, _external=True, _scheme=url_scheme)
-    current_app.logger.info(f"Ret ext URL: '{url}'")
-    return url
 
 
 # TODO: Use config setting for redirect route?
@@ -105,20 +89,12 @@ def authorized():
     if request.args.get("code"):
         cache = _load_cache()
 
-        # result = _build_msal_app(
-        #     cache=cache
-        # ).acquire_token_by_authorization_code(
-        #     request.args["code"],
-        #     scopes=current_app.config["MSAL_SCOPE"],
-        #     redirect_uri=url_for("auth.authorized", _external=True),
-        # )
-        # TODO: Replace the external_foorl.
         result = _build_msal_app(
             cache=cache
         ).acquire_token_by_authorization_code(
             request.args["code"],
-            scopes=current_app.config.get("MSAL_SCOPE"),
-            redirect_uri=external_foorl("auth.authorized"),
+            scopes=current_app.config["MSAL_SCOPE"],
+            redirect_uri=url_for("auth.authorized", _external=True),
         )
 
         if "error" in result:
@@ -186,16 +162,10 @@ def _build_msal_app(cache=None, authority=None):
 def _build_auth_url(authority=None, scopes=None, state=None):
     msal_app = _build_msal_app(authority=authority)
 
-    # auth_url = msal_app.get_authorization_request_url(
-    #     scopes or [],
-    #     state=state or str(uuid.uuid4()),
-    #     redirect_uri=url_for("auth.authorized", _external=True),
-    # )
-    # TODO: Replace the external_foorl.
     auth_url = msal_app.get_authorization_request_url(
         scopes or [],
         state=state or str(uuid.uuid4()),
-        redirect_uri=external_foorl("auth.authorized"),
+        redirect_uri=url_for("auth.authorized", _external=True),
     )
 
     return auth_url
