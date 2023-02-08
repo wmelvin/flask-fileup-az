@@ -40,7 +40,6 @@ def upload():
     #  Get list of accepted file extensions.
     upload_accept = current_app.config.get("UPLOAD_ACCEPT")
     if upload_accept:
-        assert isinstance(upload_accept, str)  # TODO: remove after live test.
         accept = upload_accept
     else:
         # print("No UPLOAD_ACCEPT configured. Default to '.csv'.")
@@ -84,11 +83,11 @@ def upload_files():
 
             dt_utc = datetime.now(timezone.utc)
 
-            if "AddPrefix" in current_app.config.get("ENABLE_FEATURES", ""):
+            if "NoPrefix" in current_app.config.get("ENABLE_FEATURES", ""):
+                upload_filename = file_name
+            else:
                 dt_str = dt_utc.strftime("%Y%m%d_%H%M%S_%f")
                 upload_filename = f"upload-{dt_str}-{file_name}"
-            else:
-                upload_filename = file_name
 
             err = store_uploaded_file(
                 upload_filename, file_name, dt_utc, up_file

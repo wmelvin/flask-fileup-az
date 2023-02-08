@@ -19,7 +19,7 @@ FILEUP_PROXY_LEVEL=0
 
 
 #  Use FILEUP_ENABLE_FEATURES to enable optional features.
-#  * 'AddPrefix' enables adding a "upload-<date_time>-" prefix to the name of
+#  * 'NoPrefix' disables adding a "upload-<date_time>-" prefix to the name of
 #    uploaded files.
 #  * 'CheckStorage' enables the /checkstorage route that checks Azure Storage
 #    Blob functions.

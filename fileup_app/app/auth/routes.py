@@ -47,11 +47,6 @@ def login():
 
     form = LoginFormMsal()
 
-    # # TODO: Remove this debugging code.
-    # current_app.logger.info(f"REQUEST: {request.base_url}")
-    # for hdr in request.headers:
-    #     current_app.logger.info(f"HEADER: {hdr}")
-
     if form.validate_on_submit():  # Always returns False for GET request.
         scopes = current_app.config.get("MSAL_SCOPE")
 

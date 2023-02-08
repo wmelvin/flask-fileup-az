@@ -48,6 +48,7 @@ function CheckKeyExists ([string] $varName) {
 }
 
 CheckKeyExists "FILEUP_SECRET_KEY"
+CheckKeyExists "FILEUP_PROXY_LEVEL"
 CheckKeyExists "FILEUP_MAX_UPLOAD_MB"
 CheckKeyExists "FILEUP_ENABLE_FEATURES"
 CheckKeyExists "FILEUP_UPLOAD_ACCEPT"

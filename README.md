@@ -40,8 +40,10 @@ The puropse of each environment variable is described below.
 
 **`FILEUP_SECRET_KEY`** Sets the Flask [SECRET_KEY](https://flask.palletsprojects.com/en/latest/config/?highlight=secret_key#SECRET_KEY).
 
+**`FILEUP_PROXY_LEVEL`** Set this to the number of proxies the app is running behind to [Tell Flask it is Behind a Proxy](https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/). That enables the [X-Forwarded-For Proxy Fix](https://werkzeug.palletsprojects.com/en/0.16.x/middleware/proxy_fix/). If not running behind a proxy, set the level to '0' (zero) to disable the ProxyFix middleware.
+
 **`FILEUP_ENABLE_FEATURES`** - Enable optional features in the application. Options are enabled using option names. Enable multiple options by separating the names with a space.
-* `AddPrefix` enables adding a "upload-*date_time*-" prefix to the name of uploaded files.
+* `NoPrefix` disables adding a "upload-*date_time*-" prefix to the name of uploaded files.
 * `CheckStorage` enables a `/checkstorage` route that calls a function to ckeck access to Azure Blob and Table storage. 
 * `LogInfo` sets the Flask logging level to `INFO` (default logging level is `WARNING`).
 * `LogDebug` sets the Flask logging level to `DEBUG` (most verbose).
