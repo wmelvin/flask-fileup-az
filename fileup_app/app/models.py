@@ -44,6 +44,13 @@ class User:
     def is_authenticated(self):
         return self._session_user is not None
 
+    def has_role(self, role_name: str) -> bool:
+        roles = self._session_user.get("roles")
+        if roles:
+            assert isinstance(roles, list)
+            return any(role == role_name for role in roles)
+        return False
+
 
 class UploadedFile:
     def __init__(

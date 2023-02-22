@@ -43,10 +43,11 @@ The puropse of each environment variable is described below.
 **`FILEUP_PROXY_LEVEL`** Set this to the number of proxies the app is running behind to [Tell Flask it is Behind a Proxy](https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/). That enables the [X-Forwarded-For Proxy Fix](https://werkzeug.palletsprojects.com/en/0.16.x/middleware/proxy_fix/). If not running behind a proxy, set the level to '0' (zero) to disable the ProxyFix middleware.
 
 **`FILEUP_ENABLE_FEATURES`** - Enable optional features in the application. Options are enabled using option names. Enable multiple options by separating the names with a space.
-* `NoPrefix` disables adding a "upload-*date_time*-" prefix to the name of uploaded files.
 * `CheckStorage` enables a `/checkstorage` route that calls a function to ckeck access to Azure Blob and Table storage. 
-* `LogInfo` sets the Flask logging level to `INFO` (default logging level is `WARNING`).
 * `LogDebug` sets the Flask logging level to `DEBUG` (most verbose).
+* `LogInfo` sets the Flask logging level to `INFO` (default logging level is `WARNING`).
+* `NoPrefix` disables adding a "upload-*date_time*-" prefix to the name of uploaded files.
+* `NoRole` allows any authenticated user to upload files without an *App Role* assignment.
 
 **`FILEUP_UPLOAD_ACCEPT`** - Comma-separated list of file types (extensions) to accept in uploaded file names. The default settings is `".csv,.xls,.xlsx"`. This is used limit the upload file selection on the client side (form input field) and for server-side file name validation.
 
@@ -54,6 +55,8 @@ The puropse of each environment variable is described below.
 
 
 #### User Identity (Authentication/Authorization) Settings
+
+**`FILEUP_APP_ROLE`** - *App Role* that must be assigned to authorize a user to upload files (unelss *NoRole* feature is enabled). Default value is `File.Upload`.
 
 **`FILEUP_MSAL_REDIRECT_PATH`** - *Not yet implemented - currently hard-coded as* `"/signin-oidc"`
 
@@ -121,3 +124,8 @@ Use [flask.current_app](https://flask.palletsprojects.com/en/latest/api/#flask.c
 [Quickstart: Deploy a Python (Django or Flask) web app to Azure](https://learn.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=flask%2Cmac-linux%2Cazure-cli%2Czip-deploy%2Cdeploy-instructions-azcli%2Cterminal-bash%2Cdeploy-instructions-zip-azcli#3---deploy-your-application-code-to-azure) -  Microsoft Learn
 
 [az webapp deploy](https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-deploy) - Microsoft Learn
+
+
+### Azure AD
+
+[Add app roles and get them from a token](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps) - Microsoft Entra

@@ -15,7 +15,7 @@ def get_env_int(var_name: str, default) -> int:
 
 
 class Config(object):
-    FILEUP_VERSION = "230207.3"
+    FILEUP_VERSION = "230221.1"
 
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.
@@ -31,6 +31,8 @@ class Config(object):
 
     UPLOAD_ACCEPT = os.environ.get("FILEUP_UPLOAD_ACCEPT") or ".csv,.xls,.xlsx"
     UPLOAD_PATH = os.environ.get("FILEUP_UPLOAD_PATH") or "uploads"
+
+    APP_ROLE = os.environ.get("FILEUP_APP_ROLE") or "File.Upload"
 
     # -- Configuration for MSAL.
 

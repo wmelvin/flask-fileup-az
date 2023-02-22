@@ -19,10 +19,12 @@ FILEUP_PROXY_LEVEL=0
 
 
 #  Use FILEUP_ENABLE_FEATURES to enable optional features.
-#  * 'NoPrefix' disables adding a "upload-<date_time>-" prefix to the name of
-#    uploaded files.
 #  * 'CheckStorage' enables the /checkstorage route that checks Azure Storage
 #    Blob functions.
+#  * 'NoPrefix' disables adding a "upload-<date_time>-" prefix to the name of
+#    uploaded files.
+#  * 'NoRole' allows any authenticated user to upload files without an App
+#    Role assignment.
 #  * 'LogDebug' or 'LogInfo' changes the logging level to DEBUG or INFO
 #    instead of the default WARNING level.
 #
@@ -43,6 +45,11 @@ FILEUP_MSAL_AUTHORITY="https://login.microsoftonline.com/(tenant_id)"
 FILEUP_MSAL_CLIENT_ID=""
 FILEUP_MSAL_CLIENT_SECRET=""
 FILEUP_MSAL_SCOPE=""
+
+
+#  App Role that must be assigned to authorize a user to upload files.
+#
+FILEUP_APP_ROLE="File.Upload"
 
 
 #  Used for both connection strings and account URLs. Required.

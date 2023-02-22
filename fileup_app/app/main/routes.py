@@ -13,7 +13,7 @@ from flask import (
 
 from werkzeug.utils import secure_filename
 
-from app.auth.routes import login_required
+from app.auth.routes import login_required, upload_role_required
 from app.main import bp
 from app.main.forms import UploadForm
 from app.storage.routes import store_uploaded_file
@@ -33,10 +33,8 @@ def version():
 
 @bp.route("/upload")
 @login_required
+@upload_role_required
 def upload():
-    # if not session.get("user"):
-    #     return redirect(url_for("auth.login"))
-
     #  Get list of accepted file extensions.
     upload_accept = current_app.config.get("UPLOAD_ACCEPT")
     if upload_accept:
@@ -55,10 +53,8 @@ def upload():
 
 @bp.route("/upload", methods=["POST"])
 @login_required
+@upload_role_required
 def upload_files():
-    # if not session.get("user"):
-    #     return redirect(url_for("auth.login"))
-
     upload_url = "main.upload"
     up_files = request.files.getlist("file")
     if (not up_files) or (len(up_files[0].filename) == 0):

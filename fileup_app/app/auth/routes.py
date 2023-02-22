@@ -41,6 +41,30 @@ def login_required(f):
     return _login_required
 
 
+def upload_role_required(f):
+    @wraps(f)
+    def _upload_role_required(*args, **kwargs):
+        #  The 'NoRole' feature allows any authenticated user to upload files
+        #  without an App Role assignment.
+        if "NoRole" in current_app.config.get("ENABLE_FEATURES", ""):
+            return f(*args, **kwargs)
+
+        role = current_app.config.get("APP_ROLE")
+        if not current_user.has_role(role):
+            current_app.logger.warning(
+                f"User '{current_user.name}' not assigned '{role}' role."
+            )
+            flash(
+                "Not authorized to upload files. Please contact an "
+                "administrator to be granted permission.",
+                "danger ",
+            )
+            return redirect(url_for("main.index"))
+        return f(*args, **kwargs)
+
+    return _upload_role_required
+
+
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     #  Route to sign in with Azure Active Directory.
@@ -67,6 +91,7 @@ def login():
 
 
 # TODO: Use config setting for redirect route?
+
 
 @bp.route("/signin-oidc")
 def authorized():
