@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------
 
 # Source function definitions.
-. .\az-funcs.ps1  
+. .\az-funcs.ps1
 
 $baseName = "fileupaz"
 $uniqtag = "01"
@@ -58,7 +58,8 @@ CheckKeyExists "FILEUP_MSAL_CLIENT_ID"
 CheckKeyExists "FILEUP_MSAL_CLIENT_SECRET"
 CheckKeyExists "FILEUP_MSAL_SCOPE"
 CheckKeyExists "FILEUP_STORAGE_CONTAINER"
-CheckKeyExists "FILEUP_STORAGE_TABLE"
+CheckKeyExists "FILEUP_STORAGE_TABLE_UPLOADS"
+CheckKeyExists "FILEUP_STORAGE_TABLE_CACHE"
 CheckKeyExists "FILEUP_STORAGE_ACCOUNT_NAME"
 CheckKeyExists "FILEUP_STORAGE_ACCOUNT_KEY"
 CheckKeyExists "FILEUP_STORAGE_ENDPOINT_SUFFIX"
@@ -83,7 +84,8 @@ if (!$storageContainerName) {
   $storageContainerName = "fileup"
 }
 
-$storageTableName = "Uploads"
+$uploadsTableName = "Uploads"
+$cacheTableName = "Cache"
 
 Say "INFO:            storageRG = '$storageRG'"
 Say "INFO:             webappRG = '$webappRG'"
@@ -92,7 +94,8 @@ Say "INFO:       appServiceName = '$appServiceName'"
 Say "INFO:           webAppName = '$webAppName'"
 Say "INFO:      storageAcctName = '$storageAcctName'"
 Say "INFO: storageContainerName = '$storageContainerName'"
-Say "INFO: storageTableName     = '$storageTableName'"
+Say "INFO:     uploadsTableName = '$uploadsTableName'"
+Say "INFO:       cacheTableName = '$cacheTableName'"
 
 
 # ======================================================================

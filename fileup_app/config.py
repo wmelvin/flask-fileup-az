@@ -15,7 +15,7 @@ def get_env_int(var_name: str, default) -> int:
 
 
 class Config(object):
-    FILEUP_VERSION = "230601.1"
+    FILEUP_VERSION = "230616.1"
 
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.
@@ -54,7 +54,8 @@ class Config(object):
 
     STORAGE_CONTAINER = os.environ.get("FILEUP_STORAGE_CONTAINER") or "fileup"
 
-    STORAGE_TABLE = os.environ.get("FILEUP_STORAGE_TABLE", "")
+    STORAGE_TABLE_UPLOADS = os.environ.get("FILEUP_STORAGE_TABLE_UPLOADS", "")
+    STORAGE_TABLE_CACHE = os.environ.get("FILEUP_STORAGE_TABLE_CACHE", "")
 
     STORAGE_ACCOUNT_KEY = os.environ.get("FILEUP_STORAGE_ACCOUNT_KEY", "")
 

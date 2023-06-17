@@ -63,10 +63,16 @@ FILEUP_STORAGE_ACCOUNT_NAME=""
 #
 FILEUP_STORAGE_CONTAINER=""
 
-#  Set FILEUP_STORAGE_TABLE to the Azure Storage Table name.
+#  Set FILEUP_STORAGE_TABLE_UPLOADS to the name of the Azure Storage Table
+#  used to store details about uploaded files.
 #  If not set, table operations are disabled.
 #
-FILEUP_STORAGE_TABLE=""
+FILEUP_STORAGE_TABLE_UPLOADS=""
+
+#  Set FILEUP_STORAGE_TABLE_CACHE to the name of the Azure Storage Table
+#  used to store cache data.
+#
+FILEUP_STORAGE_TABLE_CACHE=""
 
 #  Set these two to use connection strings. If either of these is not set
 #  then the DefaultAzureCredential is used instead of connection strings.

@@ -80,13 +80,21 @@ az storage container create `
 # -- Create Uploads table.
 #    https://learn.microsoft.com/en-us/cli/azure/storage/table?view=azure-cli-latest#az-storage-table-create
 
-Say "`nSTEP - Create Storage Table: $storageTableName`n"
+Say "`nSTEP - Create Storage Table: $uploadsTableName`n"
 
 az storage table create `
   --account-key $storageKey `
   --account-name $storageAcctName `
-  --name $storageTableName
+  --name $uploadsTableName
 
+# -- Create Cache table.
+
+Say "`nSTEP - Create Storage Table: $cacheTableName`n"
+
+az storage table create `
+  --account-key $storageKey `
+  --account-name $storageAcctName `
+  --name $cacheTableName
 
 
 # ----------------------------------------------------------------------

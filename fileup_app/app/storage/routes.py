@@ -209,7 +209,7 @@ def check_storage():
         step = "Requesting Uploads table."
         current_app.logger.info(f"CheckStorage: {step}")
 
-        if current_app.config.get("STORAGE_TABLE") and (
+        if current_app.config.get("STORAGE_TABLE_UPLOADS") and (
             get_storage_connstr() or get_storage_acct_url("table")
         ):
             result = create_uploads_table()

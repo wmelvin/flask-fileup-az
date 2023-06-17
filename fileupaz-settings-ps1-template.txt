@@ -13,7 +13,8 @@ $fileupSettings = @{
     'FILEUP_MSAL_SCOPE'              = '';
     'FILEUP_STORAGE_ACCOUNT_NAME'    = '';
     'FILEUP_STORAGE_CONTAINER'       = 'fileup';
-    'FILEUP_STORAGE_TABLE'           = '';
+    'FILEUP_STORAGE_TABLE_UPLOADS'   = '';
+    'FILEUP_STORAGE_TABLE_CACHE'     = '';
     'FILEUP_STORAGE_ACCOUNT_KEY'     = '';
     'FILEUP_STORAGE_ENDPOINT_SUFFIX' = 'core.windows.net'
 }

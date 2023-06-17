@@ -8,10 +8,10 @@ from app.storage.settings import get_storage_connstr, get_storage_acct_url
 
 
 def create_uploads_table() -> TableClient:
-    table_name = current_app.config.get("STORAGE_TABLE")
+    table_name = current_app.config.get("STORAGE_TABLE_UPLOADS")
     if not table_name:
         current_app.logger.info(
-            "create_uploads_table: Skip because STORAGE_TABLE not set."
+            "create_uploads_table: Skip because STORAGE_TABLE_UPLOADS not set."
         )
         return None
 
@@ -48,9 +48,10 @@ def insert_into_uploads_table(upload_entity) -> str:
     """
     Returns an error message, or an empty string if no errors.
     """
-    if not current_app.config.get("STORAGE_TABLE"):
+    if not current_app.config.get("STORAGE_TABLE_UPLOADS"):
         current_app.logger.info(
-            "insert_into_uploads_table: Skip because STORAGE_TABLE not set."
+            "insert_into_uploads_table: Skip because STORAGE_TABLE_UPLOADS "
+            "is not set."
         )
         return ""
 
