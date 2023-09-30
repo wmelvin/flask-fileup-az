@@ -15,7 +15,7 @@ def get_env_int(var_name: str, default) -> int:
 
 
 class Config(object):
-    FILEUP_VERSION = "230815.1"
+    FILEUP_VERSION = "230930.1"
 
     SECRET_KEY = os.environ.get("FILEUP_SECRET_KEY") or "this-secret-key-SUCKS"
     # TODO: Make sure the 'or' case does not make it to prod.
